@@ -34,9 +34,11 @@ class GitHubClient:
         # Extract link header to get URL for next page
         link_header = parse_link_header(resp.headers)
         while link_header.next is not None:
+            # Retrieve next page of results
             next_resp = self.http.request("GET", link_header.next)
-            # Populate starred_repos list with next page of results
+            # Populate starred_repos list with results
             starred_repos.extend([Repository.model_validate(repo) for repo in next_resp.json()])
+            # Update link_header before next iteration of while-loop
             link_header = parse_link_header(next_resp.headers)
 
         return starred_repos

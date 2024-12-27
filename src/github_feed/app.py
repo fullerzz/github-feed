@@ -19,5 +19,5 @@ def retrieve_activity() -> None:
 
 
 if __name__ == "__main__":
-    retrieve_activity()
+    # retrieve_activity()
     engine.get_new_releases()
