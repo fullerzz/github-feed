@@ -1,4 +1,7 @@
-from sqlmodel import Session, SQLModel, create_engine
+from collections.abc import Sequence
+from datetime import datetime
+
+from sqlmodel import Session, SQLModel, create_engine, select
 
 from github_feed.sql.models import Repository, User
 
@@ -17,3 +20,11 @@ class DbClient:
         with Session(self.engine) as session:
             session.add(repository)
             session.commit()
+
+    def get_updated_repos(self, start_date: datetime) -> Sequence[Repository]:
+        with Session(self.engine) as session:
+            statement = (
+                select(Repository).where(Repository.pushed_at is not None).where(Repository.pushed_at > start_date)  # type: ignore
+            )
+            results = session.exec(statement)
+            return results.all()
