@@ -1,6 +1,6 @@
 import pathlib
 from os import environ
-
+import duckdb
 from rich.pretty import pprint
 from rich.traceback import install
 
@@ -8,6 +8,10 @@ from github_feed.github_client import GitHubClient
 from github_feed.models import Repository
 
 install(show_locals=False)
+
+
+def get_new_releases() -> None:
+    duckdb.read_json("starred_repos.json").show()
 
 
 def save_starred_repos(repos: list[Repository], filename: str) -> None:
@@ -29,6 +33,7 @@ def retrieve_activity() -> None:
     pprint(resp)
     starred = client.get_starred_repositories()
     save_starred_repos(starred, "starred_repos.json")
+    get_new_releases()
 
 
 if __name__ == "__main__":
