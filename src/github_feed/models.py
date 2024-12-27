@@ -321,7 +321,7 @@ class Release(BaseModel):
     node_id: str
     tag_name: str
     target_commitish: str
-    name: str
+    name: str | None = None
     body: str
     draft: bool = False
     prelease: bool = False

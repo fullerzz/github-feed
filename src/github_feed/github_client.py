@@ -1,8 +1,6 @@
-from typing import Any
-
 import urllib3
 
-from github_feed.models import Repository, User
+from github_feed.models import Release, Repository, User
 from github_feed.utils import parse_link_header
 
 BASE_URL = "https://api.github.com"
@@ -44,12 +42,7 @@ class GitHubClient:
 
         return starred_repos
 
-    def get_releases(self, releases_url: str) -> list[dict[str, Any]]:
-        releases = []
-        url = releases_url.replace("{/id}", "")
-        print(f"{url=}")
+    def get_latest_release(self, releases_url: str) -> Release:
+        url = releases_url.replace("{/id}", "/latest")
         resp = self.http.request("GET", url)
-        releases.extend(resp.json())
-
-        # NOTE: For now, we'll just get the first page of releases as we want the most recent releases
-        return releases
+        return Release.model_validate(resp.json())

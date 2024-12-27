@@ -1,12 +1,13 @@
 from datetime import UTC, datetime, timedelta
 from os import environ
 
+from pydantic import ValidationError
 from rich.pretty import pprint
 from rich.traceback import install
 
-from github_feed import engine, utils
+from github_feed import out
 from github_feed.github_client import GitHubClient
-from github_feed.models import Repository
+from github_feed.models import Release, Repository
 from github_feed.sql.client import DbClient
 from github_feed.sql.models import Repository as SqlRepository
 
@@ -35,20 +36,16 @@ def check_updates(db: DbClient) -> None:
     recently_updated = db.get_updated_repos(datetime.now(UTC) - timedelta(days=1))
     token = environ["GITHUB_TOKEN"]
     client = GitHubClient(token)
+    releases: list[Release] = []
+    # Iterate over recently updated repos and check for new releases
     for repo in recently_updated:
-        pprint(repo.model_dump())
-        releases = client.get_releases(repo.releases_url)
-        for release in releases:
-            output = {
-                "tag": release["tag_name"],
-                "name": release["name"],
-                "published_at": release["published_at"],
-                "created_at": release["created_at"],
-                "url": release["html_url"],
-                "body": release["body"],
-            }
-            pprint(output)
-        exit(0)
+        try:
+            latest_release = client.get_latest_release(repo.releases_url)
+            if latest_release.created_at > datetime.now(UTC) - timedelta(days=7):
+                releases.append(latest_release)
+        except ValidationError:
+            print(f"Error validating release: {repo.name}")
+    out.display_releases(releases)
 
 
 def main() -> None:
