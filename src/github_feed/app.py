@@ -13,6 +13,8 @@ def retrieve_activity() -> None:
     client = GitHubClient(token)
     resp = client.get_user()
     pprint(resp)
+    starred = client.get_starred_repositories()
+    pprint(starred)
 
 
 if __name__ == "__main__":

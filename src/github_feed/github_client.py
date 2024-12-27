@@ -1,6 +1,6 @@
 import urllib3
 
-from github_feed.models import User
+from github_feed.models import Repository, User
 
 BASE_URL = "https://api.github.com"
 
@@ -21,3 +21,8 @@ class GitHubClient:
         url = f"{BASE_URL}/user"
         resp = self.http.request("GET", url)
         return User.model_validate_json(resp.data.decode())
+
+    def get_starred_repositories(self) -> list[Repository]:
+        url = f"{BASE_URL}/user/starred"
+        resp = self.http.request("GET", url)
+        return [Repository.model_validate(repo) for repo in resp.json()]
