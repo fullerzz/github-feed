@@ -1,4 +1,3 @@
-import pprint
 import urllib3
 
 from github_feed.models import Repository, User
