@@ -2,7 +2,7 @@ import pprint
 import urllib3
 
 from github_feed.models import Repository, User
-from github_feed.utils import extract_next_page_url_from_header, parse_link_header
+from github_feed.utils import parse_link_header
 
 BASE_URL = "https://api.github.com"
 
