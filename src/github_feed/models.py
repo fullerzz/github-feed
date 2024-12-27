@@ -4,6 +4,13 @@ from enum import Enum
 from pydantic import AnyUrl, BaseModel, EmailStr, Field
 
 
+class LinkHeader(BaseModel):
+    next: str | None = None
+    last: str | None = None
+    first: str | None = None
+    prev: str | None = None
+
+
 class User(BaseModel):
     login: str
     id: int
