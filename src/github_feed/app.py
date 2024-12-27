@@ -49,8 +49,9 @@ def check_updates(db: DbClient) -> None:
 
 
 def main() -> None:
-    # starred_repos = retrieve_activity()
     db = DbClient(f"sqlite:///{environ['DB_FILENAME']}")
+    # TODO: Enable the below commented lines based on env var or command line arg
+    # starred_repos = retrieve_activity()
     # populate_table(starred_repos, db)
     check_updates(db)
 
