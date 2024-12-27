@@ -1,5 +1,6 @@
-from typing import Any
 import urllib3
+
+from github_feed.models import User
 
 BASE_URL = "https://api.github.com"
 
@@ -16,7 +17,7 @@ class GitHubClient:
             },
         )
 
-    def get_user(self) -> dict[str, Any]:
+    def get_user(self) -> User:
         url = f"{BASE_URL}/user"
         resp = self.http.request("GET", url)
-        return resp.json()
+        return User.model_validate_json(resp.data.decode())
