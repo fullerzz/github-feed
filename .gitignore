@@ -14,4 +14,4 @@ wheels/
 **/*.env
 
 starred_repos.json
-
+*.db

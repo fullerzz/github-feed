@@ -1,7 +1,6 @@
-import pprint
 import urllib3
 
-from github_feed.models import Repository, User
+from github_feed.models import Release, Repository, User
 from github_feed.utils import parse_link_header
 
 BASE_URL = "https://api.github.com"
@@ -42,3 +41,8 @@ class GitHubClient:
             link_header = parse_link_header(next_resp.headers)
 
         return starred_repos
+
+    def get_latest_release(self, releases_url: str) -> Release:
+        url = releases_url.replace("{/id}", "/latest")
+        resp = self.http.request("GET", url)
+        return Release.model_validate(resp.json())

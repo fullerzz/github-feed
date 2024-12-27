@@ -13,6 +13,7 @@ dependencies = [
     "pyarrow>=18.1.0",
     "pydantic>=2.10.4",
     "rich>=13.9.4",
+    "sqlmodel>=0.0.22",
     "urllib3>=2.3.0",
 ]
 
@@ -42,7 +43,7 @@ indent-width = 4
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "C90", "I", "N", "UP", "ASYNC", "S", "B", "ERA", "PLE", "PLW", "PERF", "RUF", "PT"]
+select = ["E", "F", "W", "C90", "I", "N", "UP", "ASYNC", "S", "B", "PLE", "PLW", "PERF", "RUF", "PT"]
 ignore = ["E501", "S101"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
