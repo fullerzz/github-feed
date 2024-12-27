@@ -33,8 +33,22 @@ def check_updates(db: DbClient) -> None:
     # TODO: Do we want to check if any updates in last day or check if any updates since last time the script ran?
     # For now, we'll just check for updates in the last day
     recently_updated = db.get_updated_repos(datetime.now(UTC) - timedelta(days=1))
+    token = environ["GITHUB_TOKEN"]
+    client = GitHubClient(token)
     for repo in recently_updated:
-        pprint(repo.name)
+        pprint(repo.model_dump())
+        releases = client.get_releases(repo.releases_url)
+        for release in releases:
+            output = {
+                "tag": release["tag_name"],
+                "name": release["name"],
+                "published_at": release["published_at"],
+                "created_at": release["created_at"],
+                "url": release["html_url"],
+                "body": release["body"],
+            }
+            pprint(output)
+        exit(0)
 
 
 def main() -> None:

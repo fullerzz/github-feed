@@ -310,3 +310,20 @@ class Repository(BaseModel):
     anonymous_access_enabled: bool | None = Field(
         None, description="Whether anonymous git access is enabled for this repository"
     )
+
+
+class Release(BaseModel):
+    id: int
+    html_url: str
+    assets_url: str
+    tarball_url: str
+    zipball_url: str
+    node_id: str
+    tag_name: str
+    target_commitish: str
+    name: str
+    body: str
+    draft: bool = False
+    prelease: bool = False
+    created_at: datetime
+    published_at: datetime
