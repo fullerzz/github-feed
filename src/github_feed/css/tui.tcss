@@ -13,7 +13,7 @@ Screen {
     width: 50%;
 }
 
-#starredReposCount {
+#metadataPanel {
     height: 1fr;
     width: 50%;
 }
