@@ -1,13 +1,8 @@
-from rich.panel import Panel
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.widgets import Button, Header, Label, Static
+from textual.widgets import Button, Header, Label
 
-
-class EnvVarPanel(Static):
-    def on_mount(self) -> None:
-        panel = Panel("[bold cyan]Environment variable is present[/]", title="$GITHUB_TOKEN", expand=False)
-        self.update(panel)
+from github_feed.components.env_var_panel import EnvVarPanel
 
 
 class GitHubFeed(App[str]):
@@ -22,7 +17,9 @@ class GitHubFeed(App[str]):
                 classes="row",
             ),
             Horizontal(
-                Button("Yes", id="yes", variant="primary"), Button("No", id="no", variant="error"), classes="row"
+                Button("Check for New Releases", id="checkReleases", variant="primary"),
+                Button("Refresh List of Starred Repos", id="checkStarred", variant="error"),
+                classes="row",
             ),
         )
 
