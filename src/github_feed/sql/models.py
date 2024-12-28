@@ -5,6 +5,11 @@ from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
 
 
+class RunData(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    executed_at: datetime
+
+
 class User(SQLModel, table=True):
     login: str
     id: int | None = Field(default=None, primary_key=True)
