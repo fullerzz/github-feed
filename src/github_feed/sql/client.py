@@ -37,7 +37,7 @@ class DbClient:
     def get_last_run(self) -> RunData | None:
         # FIXME: This should order by executed_at and return the most recent RunData
         with Session(self.engine) as session:
-            statement = select(RunData)
+            statement = select(RunData).order_by(RunData.executed_at.isoformat())
             results = session.exec(statement)
             data = results.first()
             return data
