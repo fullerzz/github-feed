@@ -49,7 +49,6 @@ def check_updates(db: DbClient, last_checked: datetime | None) -> None:
                 releases.append(latest_release)
         except ValidationError:
             print(f"Error validating release: {repo.name}")
-    out.display_releases(releases)
     out.display_releases_panels(releases)
 
 
