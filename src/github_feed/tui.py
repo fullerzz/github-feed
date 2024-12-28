@@ -28,12 +28,32 @@ class Home(Screen):  # type: ignore[type-arg]
         )
 
 
+class Releases(Screen):  # type: ignore[type-arg]
+    BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Vertical(
+            Horizontal(
+                EnvVarPanel(shrink=True, id="envVarPanel"),
+                MetadataPanel(400, id="metadataPanel"),
+                classes="row",
+            ),
+            Horizontal(
+                Button("Check for New Releases", id="checkReleases", variant="primary"),
+                Button("Refresh List of Starred Repos", id="checkStarred", variant="error"),
+                classes="row",
+            ),
+        )
+
+
 class GitHubFeed(App[str]):
     CSS_PATH = "css/tui.tcss"
-    BINDINGS: ClassVar = [("b", "push_screen('home')", "HOME")]
+    BINDINGS: ClassVar = [("b", "push_screen('home')", "HOME"), ("c", "push_screen('releases')", "RELEASES")]
 
     def on_mount(self) -> None:
         self.install_screen(Home(), name="home")
+        self.install_screen(Releases(), name="releases")
         self.push_screen("home")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
