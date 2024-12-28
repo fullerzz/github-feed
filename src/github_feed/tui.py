@@ -24,6 +24,13 @@ class GitHubFeed(App[str]):
             ),
         )
 
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        button_id = event.button.id
+        if button_id == "checkReleases":
+            self.notify("Check releases button pressed!")
+        elif button_id == "checkStarred":
+            self.notify("Check starred button pressed!")
+
 
 if __name__ == "__main__":
     app = GitHubFeed()
