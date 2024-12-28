@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {font-style: italic}
+.r2 {font-weight: bold}
+.r3 {color: #08916a; text-decoration-color: #08916a; font-weight: bold}
+.r4 {color: #2aa298; text-decoration-color: #2aa298; font-weight: bold}
+.r5 {color: #daaa01; text-decoration-color: #daaa01; font-weight: bold}
+.r6 {color: #9f9fa9; text-decoration-color: #9f9fa9; font-weight: bold}
+.r7 {color: #08916a; text-decoration-color: #08916a; background-color: #011627; font-weight: bold}
+.r8 {font-weight: bold; text-decoration: underline}
+.r9 {background-color: #282c34}
+.r10 {color: #abb2bf; text-decoration-color: #abb2bf; background-color: #282c34}
+.r11 {color: #7f848e; text-decoration-color: #7f848e; background-color: #282c34}
+.r12 {color: #98c379; text-decoration-color: #98c379; background-color: #282c34}
+.r13 {color: #4876d6; text-decoration-color: #4876d6; font-weight: bold; text-decoration: underline}
+.r14 {color: #4876d6; text-decoration-color: #4876d6; text-decoration: underline}
+.r15 {color: #403f53; text-decoration-color: #403f53}
+.r16 {color: #403f53; text-decoration-color: #403f53; font-style: italic}
+body {
+    color: #403f53;
+    background-color: #ffffff;
+}
+</style>
+</head>
+<body>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1">                                                 New Releases                                                 </span>
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃<span class="r2"> html_url                                                         </span>┃<span class="r2"> tag_name    </span>┃<span class="r2"> created_at                </span>┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ https://github.com/elixir-lang/elixir/releases/tag/v1.18.1       │ v1.18.1     │ 2024-12-24 09:17:42+00:00 │
+│ https://github.com/ImageMagick/ImageMagick/releases/tag/7.1.1-43 │ 7.1.1-43    │ 2024-12-22 18:50:29+00:00 │
+│ https://github.com/Homebrew/brew/releases/tag/4.4.13             │ 4.4.13      │ 2024-12-23 01:00:49+00:00 │
+│ https://github.com/hoppscotch/hoppscotch/releases/tag/2024.12.0  │ 2024.12.0   │ 2024-12-23 08:08:49+00:00 │
+│ https://github.com/pola-rs/polars/releases/tag/py-1.18.0         │ py-1.18.0   │ 2024-12-24 07:19:09+00:00 │
+│ https://github.com/sst/sst/releases/tag/v3.4.32                  │ v3.4.32     │ 2024-12-27 03:15:47+00:00 │
+│ https://github.com/saadeghi/daisyui/releases/tag/v4.12.23        │ v4.12.23    │ 2024-12-26 17:00:20+00:00 │
+│ https://github.com/jcrist/msgspec/releases/tag/0.19.0            │ 0.19.0      │ 2024-12-27 17:06:58+00:00 │
+│ https://github.com/oven-sh/bun/releases/tag/bun-v1.1.42          │ bun-v1.1.42 │ 2024-12-21 03:28:13+00:00 │
+│ https://github.com/leptos-rs/leptos/releases/tag/v0.7.2          │ v0.7.2      │ 2024-12-21 19:09:01+00:00 │
+│ https://github.com/astral-sh/uv/releases/tag/0.5.13              │ 0.5.13      │ 2024-12-27 13:39:03+00:00 │
+│ https://github.com/hoarder-app/hoarder/releases/tag/v0.20.0      │ v0.20.0     │ 2024-12-22 09:13:29+00:00 │
+└──────────────────────────────────────────────────────────────────┴─────────────┴───────────────────────────┘
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">elixir</span> - <span class="r4">v1.18.1</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                       <span class="r2">1. Enhancements</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>[Kernel] Do not emit type violation warnings when comparing or matching against literals                                                                 ┃
+┃  <span class="r5"> • </span>[Kernel] Do not validate clauses of private overridable functions                                                                                        ┃
+┃                                                                                                                                                              ┃
+┃                                                                         <span class="r2">2. Bug fixes</span>                                                                         ┃
+┃                                                                                                                                                              ┃
+┃                                                                            <span class="r6">Elixir</span>                                                                            ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>[Code.Fragment] Ensure <span class="r7">Code.Fragment.container_cursor_to_quoted/2</span> with <span class="r7">:trailing_fragment</span> parses expressions that were supported in previous versions    ┃
+┃  <span class="r5"> • </span>[Kernel] Do not crash when typing violation is detected on dynamic dispatch                                                                              ┃
+┃  <span class="r5"> • </span>[Kernel] Properly annotate the source for warnings emitted by the compiler with the <span class="r7">@file</span> annotation                                                     ┃
+┃  <span class="r5"> • </span>[Kernel] Properly annotate the source for warnings emitted by the type system with the <span class="r7">@file</span> annotation                                                  ┃
+┃  <span class="r5"> • </span>[Kernel] Remove <span class="r7">:no_parens</span> metadata when using capture with arity on all cases                                                                           ┃
+┃  <span class="r5"> • </span>[Kernel] Ensure diagnostic traces are kept backwards compatible                                                                                          ┃
+┃                                                                                                                                                              ┃
+┃                                                                            <span class="r6">ExUnit</span>                                                                            ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>[ExUnit.Case] Ensure async groups do not run concurrenly while the test suite is still loading                                                           ┃
+┃  <span class="r5"> • </span>[ExUnit.Case] Ensure <span class="r7">--repeat-until-failure</span> can be combined with groups                                                                                  ┃
+┃                                                                                                                                                              ┃
+┃                                                                             <span class="r6">Mix</span>                                                                              ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>[mix compile.elixir] Store compilation results if compilation fails due to <span class="r7">--warnings-as-errors</span>                                                          ┃
+┃  <span class="r5"> • </span>[mix deps.loadpaths] Add build lock                                                                                                                      ┃
+┃  <span class="r5"> • </span>[mix escript.build] Ensure build succeeds when protocol consolidation is disabled                                                                        ┃
+┃  <span class="r5"> • </span>[Mix.Shell] Ensure encoding is properly respected on Windows and Unix systems                                                                            ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">ImageMagick</span> - <span class="r4">7.1.1-43</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">What&#x27;s Changed</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>update plugin with latest library changes by @ram-mohan in https://github.com/ImageMagick/ImageMagick/pull/7780                                          ┃
+┃  <span class="r5"> • </span>Libxml2 fixes by @nwellnhof in https://github.com/ImageMagick/ImageMagick/pull/7784                                                                      ┃
+┃  <span class="r5"> • </span>Fix reading/writing PICTs with PixMap rowBytes=[201..250] by @briankendall in https://github.com/ImageMagick/ImageMagick/pull/7840                       ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">New Contributors</span>                                                                       ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>@nwellnhof made their first contribution in https://github.com/ImageMagick/ImageMagick/pull/7784                                                         ┃
+┃  <span class="r5"> • </span>@briankendall made their first contribution in https://github.com/ImageMagick/ImageMagick/pull/7840                                                      ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r2">Full Changelog</span>: https://github.com/ImageMagick/ImageMagick/compare/7.1.1-41...7.1.1-43                                                                      ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">brew</span> - <span class="r4">4.4.13</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">What&#x27;s Changed</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>formula: conditionally use executable name as completion name by @cho-m in https://github.com/Homebrew/brew/pull/18942                                   ┃
+┃  <span class="r5"> • </span>feat: only block cask install on Linux by @SMillerDev in https://github.com/Homebrew/brew/pull/18808                                                     ┃
+┃  <span class="r5"> • </span>Fixes  #18849 :  fix duplicate casks when symlinks exist by @vidishanevatia in https://github.com/Homebrew/brew/pull/18946                               ┃
+┃  <span class="r5"> • </span>formula: add clap completion style by @daeho-ro in https://github.com/Homebrew/brew/pull/18945                                                           ┃
+┃  <span class="r5"> • </span>shims/mac/super: add <span class="r7">pkgconf</span> symlink by @cho-m in https://github.com/Homebrew/brew/pull/18823                                                            ┃
+┃  <span class="r5"> • </span>os/mac/pkgconfig/15: update expat version for 15.2 by @cho-m in https://github.com/Homebrew/brew/pull/18964                                              ┃
+┃  <span class="r5"> • </span>workflows/tests: fix RSpec JUnit XML filenames. by @MikeMcQuaid in https://github.com/Homebrew/brew/pull/18961                                           ┃
+┃  <span class="r5"> • </span>patch: restore output from failed patch by @cho-m in https://github.com/Homebrew/brew/pull/18963                                                         ┃
+┃  <span class="r5"> • </span>test/download_strategies/abstract_spec: fix test by @cho-m in https://github.com/Homebrew/brew/pull/18966                                                ┃
+┃  <span class="r5"> • </span>workflows/tests: run some jobs (again) on push. by @MikeMcQuaid in https://github.com/Homebrew/brew/pull/18967                                           ┃
+┃  <span class="r5"> • </span>dependabot: Group Sorbet updates together by @issyl0 in https://github.com/Homebrew/brew/pull/18979                                                      ┃
+┃  <span class="r5"> • </span>tap command: add -f alias to --force flag by @rrotter in https://github.com/Homebrew/brew/pull/18985                                                     ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">New Contributors</span>                                                                       ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>@vidishanevatia made their first contribution in https://github.com/Homebrew/brew/pull/18946                                                             ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r2">Full Changelog</span>: https://github.com/Homebrew/brew/compare/4.4.12...4.4.13                                                                                    ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">hoppscotch</span> - <span class="r4">2024.12.0</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  This release includes features like generating pre and post-request scripts via AI-powered prompts (cloud offering), bulk edit mode support on requests     ┃
+┃  with <span class="r7">multipart/form-data</span> content types, the ability to disable request history tracking in self-hosted instances and admin role syncing between SAML        ┃
+┃  provider and Hoppscotch (Enterprise offering) alongside a few bug fixes.                                                                                    ┃
+┃                                                                                                                                                              ┃
+┃  Read more at: https://hoppscotch.com/blog/hoppscotch-v2024-12-0.                                                                                            ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">What&#x27;s Changed</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>feat(backend): update Microsoft strategy to handle multiple scopes by @RaHehl in https://github.com/hoppscotch/hoppscotch/pull/4604                      ┃
+┃  <span class="r5"> • </span>build: enable the use of external DB for internal test deployments by @mirarifhasan in https://github.com/hoppscotch/hoppscotch/pull/4625                ┃
+┃  <span class="r5"> • </span>chore: update collection runner modal UI by @nivedin in https://github.com/hoppscotch/hoppscotch/pull/4618                                               ┃
+┃  <span class="r5"> • </span>fix: inherited headers and auth included in code generation by @Loznerol in https://github.com/hoppscotch/hoppscotch/pull/4482                           ┃
+┃  <span class="r5"> • </span>fix: read data from DB for latest value by @mirarifhasan in https://github.com/hoppscotch/hoppscotch/pull/4623                                           ┃
+┃  <span class="r5"> • </span>chore: run collection modal updates by @nivedin in https://github.com/hoppscotch/hoppscotch/pull/4633                                                    ┃
+┃  <span class="r5"> • </span>feat: add bulk edit to multipart/form data and fix url encoded form bulk edit by @amk-dev in https://github.com/hoppscotch/hoppscotch/pull/4630          ┃
+┃  <span class="r5"> • </span>feat: enhance collection runner functionality by @anwarulislam in https://github.com/hoppscotch/hoppscotch/pull/4609                                     ┃
+┃  <span class="r5"> • </span>fix(sh-admin): resolve record retrieval limits in pending invites section by implementing pagination by @JoelJacobStephen in                             ┃
+┃  <span class="r5">   </span>https://github.com/hoppscotch/hoppscotch/pull/4624                                                                                                       ┃
+┃  <span class="r5"> • </span>chore: resolve Docker image vulnerabilities associated with <span class="r7">cross-spawn</span> by @mirarifhasan in https://github.com/hoppscotch/hoppscotch/pull/4634           ┃
+┃  <span class="r5"> • </span>feat: UI for test scripts generation under AI experiments by @Govind-S-B in https://github.com/hoppscotch/hoppscotch/pull/4637                           ┃
+┃  <span class="r5"> • </span>refactor: move AI request naming style to settings by @Govind-S-B in https://github.com/hoppscotch/hoppscotch/pull/4636                                  ┃
+┃  <span class="r5"> • </span>fix: do not show an empty body element when bulk editing by @amk-dev in https://github.com/hoppscotch/hoppscotch/pull/4638                               ┃
+┃  <span class="r5"> • </span>chore: add missing <span class="r7">i18n</span> string entry by @amk-dev in https://github.com/hoppscotch/hoppscotch/pull/4639                                                   ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">New Contributors</span>                                                                       ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>@Loznerol made their first contribution in https://github.com/hoppscotch/hoppscotch/pull/4482                                                            ┃
+┃  <span class="r5"> • </span>@Govind-S-B made their first contribution in https://github.com/hoppscotch/hoppscotch/pull/4637                                                          ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r2">Full Changelog</span>: https://github.com/hoppscotch/hoppscotch/compare/2024.11.0...2024.12.0                                                                      ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">polars</span> - <span class="r4">py-1.18.0</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">🏆 Highlights</span>                                                                         ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Add new <span class="r7">Int128Type</span>  (#20232)                                                                                                                             ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                 <span class="r8">🚀 Performance improvements</span>                                                                  ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Order observability optimizations (#20396)                                                                                                               ┃
+┃  <span class="r5"> • </span>Purge ChunkedArray Metadata (#20371)                                                                                                                     ┃
+┃  <span class="r5"> • </span>Explicit transpose in new-streaming equi-join finalize (#20363)                                                                                          ┃
+┃  <span class="r5"> • </span>Cache dtype on ExprIR (#20331)                                                                                                                           ┃
+┃  <span class="r5"> • </span>Lower overhead for <span class="r7">BytecodeParser</span> on introspection of incompatible UDFs (#20280)                                                                         ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">✨ Enhancements</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Always resolve dynamic types in schema (#20406)                                                                                                          ┃
+┃  <span class="r5"> • </span>Support loading data from multiple Excel/ODS workbooks (#20404)                                                                                          ┃
+┃  <span class="r5"> • </span>Add &quot;drop_empty_cols&quot; parameter for <span class="r7">read_excel</span> and <span class="r7">read_ods</span> (#20430)                                                                                     ┃
+┃  <span class="r5"> • </span>Order observability optimizations (#20396)                                                                                                               ┃
+┃  <span class="r5"> • </span>Add FirstArgLossless supertype (#20394)                                                                                                                  ┃
+┃  <span class="r5"> • </span>Add <span class="r7">dt.replace</span> (#19708)                                                                                                                                  ┃
+┃  <span class="r5"> • </span>Polars build for Pyodide (#20383)                                                                                                                        ┃
+┃  <span class="r5"> • </span>Add Azure credential provider using <span class="r7">DefaultAzureCredential()</span> (#20384)                                                                                    ┃
+┃  <span class="r5"> • </span>Add env var to ignore file cache allocate error (#20356)                                                                                                 ┃
+┃  <span class="r5"> • </span>Enable joins between compatible differing numeric key columns (#20332)                                                                                   ┃
+┃  <span class="r5"> • </span>Cache dtype on ExprIR (#20331)                                                                                                                           ┃
+┃  <span class="r5"> • </span>Serialize DataFrame/Series using IPC in serde (#20266)                                                                                                   ┃
+┃  <span class="r5"> • </span>Improve error message on SchemaError (#20326)                                                                                                            ┃
+┃  <span class="r5"> • </span>Use better error messages when opening files (#20307)                                                                                                    ┃
+┃  <span class="r5"> • </span>Add &#x27;skip_lines&#x27; for CSV (#20301)                                                                                                                        ┃
+┃  <span class="r5"> • </span>Allow subtraction of time dtype columns (#20300)                                                                                                         ┃
+┃  <span class="r5"> • </span>Add <span class="r7">bin.reinterpret</span> (#20263)                                                                                                                             ┃
+┃  <span class="r5"> • </span>Allow decoding of non-Polars arrow dictionaries in Arrow and Parquet (#20248)                                                                            ┃
+┃  <span class="r5"> • </span>Streamline creation of empty frame from <span class="r7">Schema</span> (#20267)                                                                                                  ┃
+┃  <span class="r5"> • </span>Add <span class="r7">cat.len_chars</span> and <span class="r7">cat.len_bytes</span> (#20211)                                                                                                             ┃
+┃  <span class="r5"> • </span>Expose AexprArena (#20230)                                                                                                                               ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                         <span class="r8">🐞 Bug fixes</span>                                                                         ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Fix nullable object in map_elements (#20422)                                                                                                             ┃
+┃  <span class="r5"> • </span>Properly handle <span class="r7">to_physical_repr</span> of nested types (#20413)                                                                                                ┃
+┃  <span class="r5"> • </span>Properly raise UDF errors (#20417)                                                                                                                       ┃
+┃  <span class="r5"> • </span>Workaround for <span class="r7">mmap</span> crash under Emscripten (#20418)                                                                                                      ┃
+┃  <span class="r5"> • </span>Fix using <span class="r7">new_columns</span> in <span class="r7">scan_csv</span> with compressed file (#20412)                                                                                          ┃
+┃  <span class="r5"> • </span>Fix return type of <span class="r7">Series.dt.add_business_days</span> (#20402)                                                                                                  ┃
+┃  <span class="r5"> • </span>Fix decimal series dispatch (#20400)                                                                                                                     ┃
+┃  <span class="r5"> • </span>Fix decimal arithmetic schema (#20398)                                                                                                                   ┃
+┃  <span class="r5"> • </span>Raise on categorical search_sorted (#20395)                                                                                                              ┃
+┃  <span class="r5"> • </span>Fix plotting f-strings and docstrings (#20399)                                                                                                           ┃
+┃  <span class="r5"> • </span>Don&#x27;t try to load non-existend List/FSL statistics (#20388)                                                                                              ┃
+┃  <span class="r5"> • </span>Propagate nulls for float methods on all numeric types (#20386)                                                                                          ┃
+┃  <span class="r5"> • </span>Add env var to ignore file cache allocate error (#20356)                                                                                                 ┃
+┃  <span class="r5"> • </span>Flip order on right join (#20358)                                                                                                                        ┃
+┃  <span class="r5"> • </span>Correctly parse special float values in <span class="r7">from_repr</span> (#20351)                                                                                               ┃
+┃  <span class="r5"> • </span>Fix incorrect object store caching for ADLS URI (#20357)                                                                                                 ┃
+┃  <span class="r5"> • </span>Use the same encoding for nullable as non-nullable arrays (#20323)                                                                                       ┃
+┃  <span class="r5"> • </span>Improve error message on SchemaError (#20326)                                                                                                            ┃
+┃  <span class="r5"> • </span>Boolean optional slice pushdown (#20315)                                                                                                                 ┃
+┃  <span class="r5"> • </span>Properly handle <span class="r7">from_physical</span> for List/Array (#20311)                                                                                                    ┃
+┃  <span class="r5"> • </span>Ignore quotes in csv comments (#20306)                                                                                                                   ┃
+┃  <span class="r5"> • </span>Ensure pl.datetime returns empty column when input columns are empty (#20278)                                                                            ┃
+┃  <span class="r5"> • </span>Ensure output height does not change on lazy projection pushdown with aggregations (#20223)                                                              ┃
+┃  <span class="r5"> • </span>Fix error writing on Windows to locations outside of C drive (#20245)                                                                                    ┃
+┃  <span class="r5"> • </span>Incorrect comparison in some cases with filtered list/array columns (#20243)                                                                             ┃
+┃  <span class="r5"> • </span>Ensure height is maintained in SQL <span class="r7">SELECT 1 FROM</span> (#20241)                                                                                                ┃
+┃  <span class="r5"> • </span>Properly account for updated Categorical in .unique() kernel (#20235)                                                                                    ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">📖 Documentation</span>                                                                       ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Improve docstring clarity (#20416)                                                                                                                       ┃
+┃  <span class="r5"> • </span>Update GPU engine installation instructions to remove <span class="r7">--extra-index-url</span> from CUDA 12 packages (#20381)                                                   ┃
+┃  <span class="r5"> • </span>Remove Plugins overview page without information (#20348)                                                                                                ┃
+┃  <span class="r5"> • </span>Small fixes/clarifications in user guide (#20335)                                                                                                        ┃
+┃  <span class="r5"> • </span>Improve docs about NaN (#20310)                                                                                                                          ┃
+┃  <span class="r5"> • </span>Fix substr function param definition (#19054)                                                                                                            ┃
+┃  <span class="r5"> • </span>Include parquet options in BigQuery I/O write sample (#20292)                                                                                            ┃
+┃  <span class="r5"> • </span>Fix typo in <span class="r7">fork</span> warning (#20258)                                                                                                                        ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">📦 Build system</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Add <span class="r7">project.dynamic = [&quot;version&quot;]</span> to pyproject.toml (#20345)                                                                                             ┃
+┃  <span class="r5"> • </span>Update <span class="r7">pyo3</span> and <span class="r7">numpy</span> crates to version <span class="r7">0.23</span> (#20111)                                                                                                    ┃
+┃  <span class="r5"> • </span>Build wheels for ARM Windows in Python release workflow (#20247)                                                                                         ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                     <span class="r8">🛠️ Other improvements</span>                                                                     ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Enable masked out list, struct and array elements in parametric tests (#20365)                                                                           ┃
+┃  <span class="r5"> • </span>Move hive partitioning/multi-file handling outside of readers (#20203)                                                                                   ┃
+┃  <span class="r5"> • </span>Purge ChunkedArray Metadata (#20371)                                                                                                                     ┃
+┃  <span class="r5"> • </span>Correcting misspelled return value and unifying regional spelling (#20375)                                                                               ┃
+┃  <span class="r5"> • </span>Add test for <span class="r7">select(len())</span> (#20343)                                                                                                                      ┃
+┃  <span class="r5"> • </span>Make parametric tests include <span class="r7">pl.List</span> and <span class="r7">pl.Array</span> by default (#20319)                                                                                   ┃
+┃  <span class="r5"> • </span>Use Column in Row Encoding (#20312)                                                                                                                      ┃
+┃  <span class="r5"> • </span>Don&#x27;t warn on fork hook (#20309)                                                                                                                         ┃
+┃  <span class="r5"> • </span>Don&#x27;t deconstruct <span class="r7">CsvParseOptions</span> (#20302)                                                                                                               ┃
+┃  <span class="r5"> • </span>Allow decoding of non-Polars arrow dictionaries in Arrow and Parquet (#20248)                                                                            ┃
+┃  <span class="r5"> • </span>Prepare test suite for Python 3.13 support (#20297)                                                                                                      ┃
+┃  <span class="r5"> • </span>Add <span class="r7">FunctionCastOptions</span> and conservative IR-level cast type-checking (#20286)                                                                            ┃
+┃  <span class="r5"> • </span>Add more descriptive error message for failure of vstack/extend (#20299)                                                                                 ┃
+┃  <span class="r5"> • </span>Clean up some remnants of Python 3.8 support (#20293)                                                                                                    ┃
+┃  <span class="r5"> • </span>Add new <span class="r7">Int128Type</span>  (#20232)                                                                                                                             ┃
+┃  <span class="r5"> • </span>Add test for BytesIO overwritten after scan (#20240)                                                                                                     ┃
+┃  <span class="r5"> • </span>Expose AexprArena (#20230)                                                                                                                               ┃
+┃                                                                                                                                                              ┃
+┃  Thank you to all our contributors for making this release possible! @Jesse-Bakker, @Terrigible, @ZemanOndrej, @alexander-beedie, @balbok0, @beckernick,     ┃
+┃  @bschoenmaeckers, @coastalwhite, @georgestagg, @hamdanal, @haocheng6, @kszlim, @lukemanley, @mcrumiller, @nameexhaustion, @noexecstack, @orlp, @ptiza,      ┃
+┃  @r-brink, @ritchie46, @rodrigogiraoserrao, @stijnherfst, @stinodego, @tswast and @zero-stroke                                                               ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">sst</span> - <span class="r4">v3.4.32</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                                                                                                              ┃
+┃                                                                          <span class="r8">Changelog</span>                                                                           ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>86d6994d3e582de53876f3ffbf5930887a7adf4d Bump OpenNext to v3.3.0 (#5237)                                                                                 ┃
+┃  <span class="r5"> • </span>2830933a70b9b6c37dec9e985f946128ef0eedc3 Task: fix directory for sst dev                                                                                 ┃
+┃  <span class="r5"> • </span>6353b5886e2d25d62a57b10722905e67db48cc16 Task: fix sdk type                                                                                              ┃
+┃  <span class="r5"> • </span>31cdc3ae35a3d3009a4c9fafa0c35a4b7791d5dc fix typo (#5258)                                                                                                ┃
+┃  <span class="r5"> • </span>c8717d998134895a10f4f7707a4f9572400ff800 upgrade go-retriablehttp to 0.7.7 (#5212)                                                                       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">daisyui</span> - <span class="r4">v4.12.23</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  🌼 Read changelog: https://daisyui.com/docs/changelog/                                                                                                      ┃
+┃                                                                                                                                                              ┃
+┃  📦 Install this update:                                                                                                                                     ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃  <span class="r9"> </span><span class="r10">npm i -D daisyui@4.12.23</span><span class="r9">                                                                                                                                 </span>  ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃                                                                                                                                                              ┃
+┃  💚 Thank you for using daisyUI!                                                                                                                             ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">msgspec</span> - <span class="r4">0.19.0</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Improve JSON encoding performance by up to 40% (#647).                                                                                                   ┃
+┃  <span class="r5"> • </span>Ensure <span class="r7">tuple</span> and <span class="r7">frozenset</span> default values are treated identically whether specified by value or <span class="r7">default_factory</span> (#653).                                  ┃
+┃  <span class="r5"> • </span>Fix memory leak of <span class="r7">match_args</span> in <span class="r7">StructConfig</span> object (#684).                                                                                             ┃
+┃  <span class="r5"> • </span>Fix memory leak in <span class="r7">Raw.copy()</span> (#709).                                                                                                                    ┃
+┃  <span class="r5"> • </span>Update <span class="r7">decode</span> signatures for PEP 688 (#740).                                                                                                             ┃
+┃  <span class="r5"> • </span>Generate <span class="r7">__replace__</span> method on <span class="r7">Struct</span> types, for use with <span class="r7">copy.replace</span> (#747).                                                                           ┃
+┃  <span class="r5"> • </span>Fix incorrect decoding of certain &gt; 64 bit integers (#751).                                                                                              ┃
+┃  <span class="r5"> • </span>Call <span class="r7">__post_init__</span> when converting from an object to a Struct (#752).                                                                                    ┃
+┃  <span class="r5"> • </span><span class="r2">BREAKING</span>: Expand buffer when <span class="r7">encode_into</span> is passed a buffer smaller than <span class="r7">offset</span> (#753).                                                                  ┃
+┃  <span class="r5"> • </span>Support <span class="r7">Raw</span> objects as inputs to <span class="r7">convert</span> (#754).                                                                                                         ┃
+┃  <span class="r5"> • </span>Error nicely when a dataclass <span class="r1">type</span> (instead of an <span class="r1">instance</span>) is passed to <span class="r7">encode</span> (#755).                                                                  ┃
+┃  <span class="r5"> • </span>Drop support for Python 3.8 (#756, #763).                                                                                                                ┃
+┃  <span class="r5"> • </span>Add support for Python 3.13 (#711).                                                                                                                      ┃
+┃  <span class="r5"> • </span>Remove deprecated <span class="r7">from_builtins</span> (#761).                                                                                                                  ┃
+┃  <span class="r5"> • </span>Support encoding any <span class="r7">Enum</span> type whose <span class="r7">.value</span> is a supported type (#757).                                                                                  ┃
+┃  <span class="r5"> • </span>Don&#x27;t fail eagerly when processing generic types with unsupported <span class="r7">__parameters__</span> (#772).                                                                 ┃
+┃  <span class="r5"> • </span>Use <span class="r7">eval_type_backport</span> to backport type annotations to Python 3.9 (#773).                                                                                ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">bun</span> - <span class="r4">bun-v1.1.42</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  To install Bun v1.1.42                                                                                                                                      ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃  <span class="r9"> </span><span class="r10">curl -fsSL https://bun.sh/install | bash</span><span class="r9">                                                                                                                 </span>  ┃
+┃  <span class="r9"> </span><span class="r11"># or you can use npm</span><span class="r9">                                                                                                                                     </span>  ┃
+┃  <span class="r9"> </span><span class="r11"># npm install -g bun</span><span class="r9">                                                                                                                                     </span>  ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃                                                                                                                                                              ┃
+┃  Windows:                                                                                                                                                    ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃  <span class="r9"> </span><span class="r10">powershell -c </span><span class="r12">&quot;irm bun.sh/install.ps1|iex&quot;</span><span class="r9">                                                                                                               </span>  ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃                                                                                                                                                              ┃
+┃  To upgrade to Bun v1.1.42:                                                                                                                                  ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃  <span class="r9"> </span><span class="r10">bun upgrade</span><span class="r9">                                                                                                                                              </span>  ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃                                                                                                                                                              ┃
+┃                                                        <a class="r13" href="https://bun.sh/blog/bun-v1.1.42">Read Bun v1.1.42&#x27;s release notes on Bun&#x27;s blog</a>                                                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">leptos</span> - <span class="r4">v0.7.2</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  <span class="r2">If you&#x27;re migrating from 0.6 to 0.7, please see the 0.7.0 release notes </span><a class="r13" href="https://github.com/leptos-rs/leptos/releases/tag/v0.7.0">here</a><span class="r2">.</span>                                                                               ┃
+┃                                                                                                                                                              ┃
+┃  This is a small patch release including a couple of bugfixes, importantly to the hydration of static text nodes on <span class="r7">nightly</span>.                                 ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">What&#x27;s Changed</span>                                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Update elements.rs to include <span class="r7">popovertarget</span> and <span class="r7">popovertargetaction</span> for the <span class="r7">&lt;button&gt;</span> element by @Figments in                                             ┃
+┃  <span class="r5">   </span>https://github.com/leptos-rs/leptos/pull/3379                                                                                                            ┃
+┃  <span class="r5"> • </span>fix(ci): missing glib in ci by @sabify in https://github.com/leptos-rs/leptos/pull/3376                                                                  ┃
+┃  <span class="r5"> • </span>docs: showcase let syntax in for_loop by @purung in https://github.com/leptos-rs/leptos/pull/3383                                                        ┃
+┃  <span class="r5"> • </span>Add <span class="r7">From&lt;ArcStore&lt;T&gt;&gt;</span> for <span class="r7">Store&lt;T, S&gt;</span> by @mscofield0 in https://github.com/leptos-rs/leptos/pull/3389                                                    ┃
+┃  <span class="r5"> • </span>fix: correct span for <span class="r7">let:</span> syntax (closes #3387) by @gbj in https://github.com/leptos-rs/leptos/pull/3391                                                ┃
+┃  <span class="r5"> • </span>fix(ci): add missing glib for semver checks by @sabify in https://github.com/leptos-rs/leptos/pull/3393                                                  ┃
+┃  <span class="r5"> • </span>fix: correct hydration position for static text nodes in <span class="r7">nightly</span> (closes #3395) by @gbj in https://github.com/leptos-rs/leptos/pull/3396                 ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                       <span class="r8">New Contributors</span>                                                                       ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>@Figments made their first contribution in https://github.com/leptos-rs/leptos/pull/3379                                                                 ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r2">Full Changelog</span>: https://github.com/leptos-rs/leptos/compare/v0.7.1...v0.7.2                                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">uv</span> - <span class="r4">0.5.13</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">Release Notes</span>                                                                         ┃
+┃                                                                                                                                                              ┃
+┃                                                                          <span class="r2">Bug fixes</span>                                                                           ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>Avoid enforcing URL check on initial publish (<a class="r14" href="https://github.com/astral-sh/uv/pull/10182">#10182</a>)                                                                                                    ┃
+┃  <span class="r5"> • </span>Fix incorrect mismatched constraints reference (<a class="r14" href="https://github.com/astral-sh/uv/pull/10184">#10184</a>)                                                                                                  ┃
+┃  <span class="r5"> • </span>Revert &quot;Update <span class="r7">reqwest</span> (#10178)&quot; (<a class="r14" href="https://github.com/astral-sh/uv/pull/10187">#10187</a>)                                                                                                                ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                      <span class="r8">Install uv 0.5.13</span>                                                                       ┃
+┃                                                                                                                                                              ┃
+┃                                                          <span class="r2">Install prebuilt binaries via shell script</span>                                                          ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃  <span class="r9"> </span><span class="r10">curl --proto </span><span class="r12">&#x27;=https&#x27;</span><span class="r10"> --tlsv1.2 -LsSf https://github.com/astral-sh/uv/releases/download/0.5.13/uv-installer.sh | sh</span><span class="r9">                                      </span>  ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃                                                                                                                                                              ┃
+┃                                                       <span class="r2">Install prebuilt binaries via powershell script</span>                                                        ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃  <span class="r9"> </span><span class="r10">powershell -ExecutionPolicy ByPass -c </span><span class="r12">&quot;irm https://github.com/astral-sh/uv/releases/download/0.5.13/uv-installer.ps1 | iex&quot;</span><span class="r9">                              </span>  ┃
+┃  <span class="r9">                                                                                                                                                          </span>  ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                      <span class="r8">Download uv 0.5.13</span>                                                                      ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃   <span class="r2"> File                                     </span> <span class="r2"> Platform                     </span> <span class="r2"> Checksum </span>                                                                       ┃
+┃   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                                                       ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-aarch64-apple-darwin.tar.gz">uv-aarch64-apple-darwin.tar.gz</a>             Apple Silicon macOS            <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-aarch64-apple-darwin.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-apple-darwin.tar.gz">uv-x86_64-apple-darwin.tar.gz</a>              Intel macOS                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-apple-darwin.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-i686-pc-windows-msvc.zip">uv-i686-pc-windows-msvc.zip</a>                x86 Windows                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-i686-pc-windows-msvc.zip.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-pc-windows-msvc.zip">uv-x86_64-pc-windows-msvc.zip</a>              x64 Windows                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-pc-windows-msvc.zip.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-aarch64-unknown-linux-gnu.tar.gz">uv-aarch64-unknown-linux-gnu.tar.gz</a>        ARM64 Linux                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-aarch64-unknown-linux-gnu.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-i686-unknown-linux-gnu.tar.gz">uv-i686-unknown-linux-gnu.tar.gz</a>           x86 Linux                      <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-i686-unknown-linux-gnu.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-powerpc64-unknown-linux-gnu.tar.gz">uv-powerpc64-unknown-linux-gnu.tar.gz</a>      PPC64 Linux                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-powerpc64-unknown-linux-gnu.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-powerpc64le-unknown-linux-gnu.tar.gz">uv-powerpc64le-unknown-linux-gnu.tar.gz</a>    PPC64LE Linux                  <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-powerpc64le-unknown-linux-gnu.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-s390x-unknown-linux-gnu.tar.gz">uv-s390x-unknown-linux-gnu.tar.gz</a>          S390x Linux                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-s390x-unknown-linux-gnu.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-unknown-linux-gnu.tar.gz">uv-x86_64-unknown-linux-gnu.tar.gz</a>         x64 Linux                      <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-unknown-linux-gnu.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-armv7-unknown-linux-gnueabihf.tar.gz">uv-armv7-unknown-linux-gnueabihf.tar.gz</a>    ARMv7 Linux                    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-armv7-unknown-linux-gnueabihf.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-aarch64-unknown-linux-musl.tar.gz">uv-aarch64-unknown-linux-musl.tar.gz</a>       ARM64 MUSL Linux               <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-aarch64-unknown-linux-musl.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-i686-unknown-linux-musl.tar.gz">uv-i686-unknown-linux-musl.tar.gz</a>          x86 MUSL Linux                 <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-i686-unknown-linux-musl.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-unknown-linux-musl.tar.gz">uv-x86_64-unknown-linux-musl.tar.gz</a>        x64 MUSL Linux                 <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-x86_64-unknown-linux-musl.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-arm-unknown-linux-musleabihf.tar.gz">uv-arm-unknown-linux-musleabihf.tar.gz</a>     ARMv6 MUSL Linux (Hardfloat)   <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-arm-unknown-linux-musleabihf.tar.gz.sha256">checksum</a>                                                                        ┃
+┃    <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-armv7-unknown-linux-musleabihf.tar.gz">uv-armv7-unknown-linux-musleabihf.tar.gz</a>   ARMv7 MUSL Linux               <a class="r14" href="https://github.com/astral-sh/uv/releases/download/0.5.13/uv-armv7-unknown-linux-musleabihf.tar.gz.sha256">checksum</a>                                                                        ┃
+┃                                                                                                                                                              ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class="r3">hoarder</span> - <span class="r4">v0.20.0</span> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  Welcome to the <span class="r7">0.20.0</span> release of Hoarder! This release adds internationalization support, new markdown editor, mobile app improvements, broken link         ┃
+┃  management and more! As usual, we&#x27;re welcoming our new contributors: @Tukks, @vhsdream, @sweepies, @PeterDaveHello, @wuast94 and @eltociear!                ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r15">▌ If you&#x27;re enjoying Hoarder, you can consider supporting it </span><a class="r14" href="https://buymeacoffee.com/mbassem">here ☕️</a><span class="r15"> or via github </span><a class="r14" href="https://github.com/sponsors/MohamedBassem">here</a><span class="r15">.                                                                </span>    ┃
+┃                                                                                                                                                              ┃
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+┃  ┃                                                                      <span class="r2">New Features</span>                                                                      ┃  ┃
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span><span class="r2">Hoarder&#x27;s UI now comes in multiple languages</span>!                                                                                                            ┃
+┃  <span class="r5">    • </span>You can change the language of the UI now to English, German, French, Swedish, Simplified and Traditional Chinese.                                    ┃
+┃  <span class="r5">    • </span>If you want to see your language there or want to improve some existing translation, you can do that via weblate <a class="r14" href="https://hosted.weblate.org/engage/hoarder/">here</a>.                                ┃
+┃  <span class="r5"> • </span><span class="r2">New experimental WYSIWYG markdown editor</span> for notes by @Tukks!                                                                                            ┃
+┃  <span class="r5">    • </span>You&#x27;ll now get a preview of the notes you&#x27;re writing as you&#x27;re writing them!                                                                          ┃
+┃  <span class="r5"> • </span><span class="r2">A bunch of mobile app improvements</span>:                                                                                                                      ┃
+┃  <span class="r5">    • </span>You can now manage tags from the app. Super overdue, I know.                                                                                          ┃
+┃  <span class="r5">    • </span>We have a new cleaner &quot;info&quot; page with the ability to edit title/tags/lists all in one page.                                                          ┃
+┃  <span class="r5">    • </span>The mobile app now looks <span class="r1">slightly</span> more native. We&#x27;ve got rid of the dedicated search tag, switched to native modals, and used native page headers     ┃
+┃  <span class="r5">      </span>when possible.                                                                                                                                        ┃
+┃  <span class="r5">    • </span>Note: The apps are yet to be approved by apple &amp; google.                                                                                              ┃
+┃  <span class="r5"> • </span><span class="r2">Broken Link management</span>:                                                                                                                                  ┃
+┃  <span class="r5">    • </span>Hoarder now stores the status codes it got when crawling websites which will allow you to identify and decide what to do about broken links.          ┃
+┃  <span class="r5">    • </span>This is now mainly useful for people doing large imports into hoarder, but in the future, we&#x27;ll use the same mechanism to support automatic link      ┃
+┃  <span class="r5">      </span>liveness healthchecks.                                                                                                                                ┃
+┃  <span class="r5"> • </span><span class="r2">Chrome as an optional dependency (aka minimal installation)</span>:                                                                                             ┃
+┃  <span class="r5">    • </span>Chrome is no longer a hard dependency. This is useful for people running hoarder in resource constrained environments.                                ┃
+┃  <span class="r5">    • </span>If you don&#x27;t specify a <span class="r7">BROWSER_WEB_URL</span>, hoarder will fallback to a plain HTTP requests to the websites you add instead of crawling them with chrome.  ┃
+┃  <span class="r5">    • </span>Without chrome, you&#x27;ll lose the ability to get screenshots from the websites you crawl, and websites that heavily rely on javascript won&#x27;t work       ┃
+┃  <span class="r5">      </span>properly.                                                                                                                                             ┃
+┃  <span class="r5">    • </span>With chrome and meilisearch being optional dependencies, you can now get a single-container minimal installation of hoarder by sacrificing some of    ┃
+┃  <span class="r5">      </span>the features.                                                                                                                                         ┃
+┃  <span class="r5"> • </span><span class="r2">New installation methods</span>:                                                                                                                                ┃
+┃  <span class="r5">    • </span>Debian / Ubuntu one click installation script (<a class="r14" href="https://docs.hoarder.app/next/Installation/debuntu">docs</a>) by @vhsdream                                                                                     ┃
+┃  <span class="r5">    • </span>If you&#x27;re a proxmox user, you can also get a one click LXC container running hoarder using <a class="r14" href="https://community-scripts.github.io/ProxmoxVE/scripts?id=hoarder">proxmox&#x27;s helper scripts</a> again thanks to @vhsdream.        ┃
+┃  <span class="r5">    • </span>PikaPod (<a class="r14" href="https://docs.hoarder.app/next/Installation/pikapods">docs</a>) are now offering paid hoarder hosting (~$3/month) for the less tech savvy folks out there. Disclaimer: they&#x27;re sharing some of their   ┃
+┃  <span class="r5">      </span>revenue from Hoarder with us.                                                                                                                         ┃
+┃  <span class="r5"> • </span><span class="r2">Tags placeholder in AI prompt customization:</span>                                                                                                             ┃
+┃  <span class="r5">    • </span>You can use the placeholders <span class="r7">$tags</span>, <span class="r7">$aiTags</span>, <span class="r7">$userTags</span> in the prompt. These placeholders will be replaced with all tags, ai generated tags or human   ┃
+┃  <span class="r5">      </span>created tags when automatic tagging is performed thanks to @kamtschatka.                                                                              ┃
+┃  <span class="r5">    • </span>With that, you can use this to instruct the LLM to only use existing tags (instead of coming up with new ones). Be careful though if you have a lot   ┃
+┃  <span class="r5">      </span>of tags as it might increase the cost of the tagging significantly.                                                                                   ┃
+┃  <span class="r5">    • </span>This mechanism is just a temporary solution. We&#x27;re working on a mechanism to support this natively, in a much cheaper way.                            ┃
+┃  <span class="r5"> • </span><span class="r2">New community projects documentation page</span> (<a class="r14" href="https://docs.hoarder.app/next/community-projects">here</a>):                                                                                                        ┃
+┃  <span class="r5">    • </span>With the release of the REST API in the last version, we started seeing some community projects pop up. So we&#x27;re starting a new documentation page    ┃
+┃  <span class="r5">      </span>to list them out for visibility.                                                                                                                      ┃
+┃  <span class="r5">    • </span>Hoarder now has a <a class="r13" href="https://www.raycast.com/luolei/hoarder">raycast extension</a> and an <a class="r13" href="https://www.alfredforum.com/topic/22528-hoarder-workflow-for-self-hosted-bookmark-management/">alfred workflow</a> thanks to @foru17 and @yinan-c. Go install them now!                                       ┃
+┃  <span class="r5">    • </span>If you develop a new extension for hoarder, let us know as we&#x27;d love to feature it in that page!                                                      ┃
+┃  <span class="r5"> • </span>Others:                                                                                                                                                  ┃
+┃  <span class="r5">    • </span>We&#x27;ve added the ability to show admin warnings in the admin panels for misconfigurations or future migrations.                                        ┃
+┃                                                                                                                                                              ┃
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+┃  ┃                                                                    <span class="r2">UX Improvements</span>                                                                     ┃  ┃
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>We&#x27;re now trimming email addresses out of whitespaces during signin thanks to @sweepies!                                                                 ┃
+┃                                                                                                                                                              ┃
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+┃  ┃                                                                         <span class="r2">Fixes</span>                                                                          ┃  ┃
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>AI summarization sometimes included the LLM&#x27;s response to the prompt (e.g. &quot;Ok, I&#x27;ll summarize ...&quot;). We&#x27;re now instructing the model to only respond    ┃
+┃  <span class="r5">   </span>with the summary.                                                                                                                                        ┃
+┃  <span class="r5"> • </span>Fix broken homepage when hitting a bookmark with an invalid image URL.                                                                                   ┃
+┃  <span class="r5"> • </span>Multiple worker reliability improvements specially in countries with restricted internet.                                                                ┃
+┃  <span class="r5">    • </span>The worker container doesn&#x27;t need to download pnpm on startup anymore as it&#x27;s now bundled in the container.                                           ┃
+┃  <span class="r5">    • </span>The crawler&#x27;s adblock list download now has a timeout and can be completely bypassed with <span class="r7">CRAWLER_ENABLE_ADBLOCKER=false</span>.                             ┃
+┃  <span class="r5">    • </span>The worker was sometimes hanging in the screenshot call. This now has a timeout as well.                                                              ┃
+┃                                                                                                                                                              ┃
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+┃  ┃                                                                      <span class="r2">Screenshots</span>                                                                       ┃  ┃
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                   <span class="r8">The new Markdown Editor</span>                                                                    ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                    <span class="r8">Broken Link Management</span>                                                                    ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                   <span class="r8">Mobile App Improvements</span>                                                                    ┃
+┃                                                                                                                                                              ┃
+┃  New options at the bottom of the bookmark preview page                                                                                                      ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃  Tag Management                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃  The new info page                                                                                                                                           ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                        <span class="r8">Admin Notices</span>                                                                         ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                                                                                                                              ┃
+┃                                                            <span class="r8">Raycast extension and Alfred workflows</span>                                                            ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r15">▌ </span><span class="r16">Those screenshots are from the authors of the extensions.</span><span class="r15">                                                                                             </span>    ┃
+┃                                                                                                                                                              ┃
+┃  <a class="r14" href="https://www.raycast.com/luolei/hoarder">Raycast extension</a> by @foru17                                                                                                                                ┃
+┃                                                                                                                                                              ┃
+┃  🌆 <a class="r17" href="https://github.com/user-attachments/assets/9624c0f8-b4d8-4b9b-bc3a-5ae4335cc193">image</a>                                                                                                                                                    ┃
+┃                                                                                                                                                              ┃
+┃  <a class="r14" href="https://www.alfredforum.com/topic/22528-hoarder-workflow-for-self-hosted-bookmark-management/">Alfred workflow</a> by @yinan-c                                                                                                                                 ┃
+┃                                                                                                                                                              ┃
+┃  🌆 <a class="r17" href="https://github.com/user-attachments/assets/61bcba3b-93b8-47e4-ba53-e1da9a525fc2">image</a>                                                                                                                                                    ┃
+┃                                                                                                                                                              ┃
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+┃  ┃                                                                       <span class="r2">Upgrading</span>                                                                        ┃  ┃
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
+┃                                                                                                                                                              ┃
+┃  To upgrade:                                                                                                                                                 ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>If you&#x27;re using HOARDER_VERSION=release, run <span class="r7">docker compose pull &amp;&amp; docker compose up -d</span>.                                                                ┃
+┃  <span class="r5"> • </span>If you&#x27;re pinning it to a specific version, upgrade the version and then run <span class="r7">docker compose pull &amp;&amp; docker compose up -d</span>.                                ┃
+┃                                                                                                                                                              ┃
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃
+┃  ┃                                                                      <span class="r2">All Commits</span>                                                                       ┃  ┃
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃
+┃                                                                                                                                                              ┃
+┃  <span class="r5"> • </span>i18n: Enable the Swedish translation - @MohamedBassem in e3b8cda                                                                                         ┃
+┃  <span class="r5"> • </span>i18n: Merge translations from weblate - @MohamedBassem in ab1f49b                                                                                        ┃
+┃  <span class="r5"> • </span>feature: Add an admin notice about the usage of the legacy container images - @MohamedBassem in 4bfb3b4                                                  ┃
+┃  <span class="r5"> • </span>release(mobile): Bump mobile version to 1.6.7-4 - @MohamedBassem in 2245887                                                                              ┃
+┃  <span class="r5"> • </span>deps: Upgrade nextjs to 14.2.15 - @MohamedBassem in 7c05bc8                                                                                              ┃
+┃  <span class="r5"> • </span>deps: Upgrade prettier to 3.4.2 - @MohamedBassem in 1aa7639                                                                                              ┃
+┃  <span class="r5"> • </span>docs: Add the community projects page to docs - @MohamedBassem in 973d552                                                                                ┃
+┃  <span class="r5"> • </span>feature: WYSIWYG markdown for notes. Fixes #701 (#715) - @Tukks in 40c5262                                                                               ┃
+┃  <span class="r5"> • </span>Translated using Weblate (German) - @murray3k in 14f8937                                                                                                 ┃
+┃  <span class="r5"> • </span>Translated using Weblate (Dutch) - Guido (via weblate) in 17fdd93                                                                                        ┃
+┃  <span class="r5"> • </span>Added translation using Weblate (Dutch) - Guido (via weblate) in 25ebd8e                                                                                 ┃
+┃  <span class="r5"> • </span>Translated using Weblate (Swedish) - Marcus skoding (via weblate) in 20968ec                                                                             ┃
+┃  <span class="r5"> • </span>Added translation using Weblate (Swedish) - Marcus skoding (via weblate) in 883087b                                                                      ┃
+┃  <span class="r5"> • </span>fix: trim whitespace from email on signin page (#714) - @sweepies in 16f2ce3                                                                             ┃
+┃  <span class="r5"> • </span>fix(mobile): useLayoutEffect for navigator changes - @MohamedBassem in 6fba9d1                                                                           ┃
+┃  <span class="r5"> • </span>ui(mobile): Use native search bar for manage tags page - @MohamedBassem in deadcb9                                                                       ┃
+┃  <span class="r5"> • </span>fix(mobule): Fix keyboard issues in the info screen - @MohamedBassem in 6055f50                                                                          ┃
+┃  <span class="r5"> • </span>ui(mobile): Make page titles more native - @MohamedBassem in f4b2bac                                                                                     ┃
+┃  <span class="r5"> • </span>feature: Store crawling status code and allow users to find broken links. Fixes #169 - @MohamedBassem in 705d539                                         ┃
+┃  <span class="r5"> • </span>docs: Add Linux install script and documentation (#707) - @vhsdream in a7b1386                                                                           ┃
+┃  <span class="r5"> • </span>feature(workers): Allow running hoarder without chrome as a hard dependency. Fixes #650 - @MohamedBassem in 1810100                                      ┃
+┃  <span class="r5"> • </span>fix(mobile): Use keyboard avoiding view in the info page - @MohamedBassem in 5a49691                                                                     ┃
+┃  <span class="r5"> • </span>fix(extension): Fix dev build. Fixes #670 - @MohamedBassem in 1a2b600                                                                                    ┃
+┃  <span class="r5"> • </span>fix: Instruct the model to only respond with the summary when summarizing content - @MohamedBassem in b9f1a59                                            ┃
+┃  <span class="r5"> • </span>fix(workers): Add spaces in tag placeholders for better tokenization - @MohamedBassem in 036554a                                                         ┃
+┃  <span class="r5"> • </span>feature: Add support for tag placeholders in custom prompts. #111 (#612) - @kamtschatka in fdf28ae                                                       ┃
+┃  <span class="r5"> • </span>release(mobile): Bump mobile version to 1.6.7-2 - @MohamedBassem in 82af305                                                                              ┃
+┃  <span class="r5"> • </span>docs: Fix docs build - @MohamedBassem in 6392cca                                                                                                         ┃
+┃  <span class="r5"> • </span>deps(mobile): Upgrade to Expo 52 (#692) - @MohamedBassem in fd4a996                                                                                      ┃
+┃  <span class="r5"> • </span>release(mobile): Bump mobile version to 1.6.7-1 - @MohamedBassem in d32457e                                                                              ┃
+┃  <span class="r5"> • </span>feature(mobile): Add support for creating tags from the manage tags page - @MohamedBassem in 2e5cd59                                                     ┃
+┃  <span class="r5"> • </span>fix(mobile): Dont dismiss keyboard on tag selection - @MohamedBassem in dd80f91                                                                          ┃
+┃  <span class="r5"> • </span>release(mobile): Bump mobile version to 1.6.7 - @MohamedBassem in bf80fa2                                                                                ┃
+┃  <span class="r5"> • </span>feat(mobile): Add support for managing tags from mobile - @MohamedBassem in 2745330                                                                      ┃
+┃  <span class="r5"> • </span>feat(mobile): Allow editing titles and a cleaner info page - @MohamedBassem in fbb2644                                                                   ┃
+┃  <span class="r5"> • </span>ui(mobile): Replace bottom sheet with native screens (#690) - @MohamedBassem in 5522e20                                                                  ┃
+┃  <span class="r5"> • </span>readme: Add weblate translations to readme - @MohamedBassem in 4bb7487                                                                                   ┃
+┃  <span class="r5"> • </span>ui(mobile): Remove the dedicated search page and add a search bar in home - @MohamedBassem in cc84e01                                                    ┃
+┃  <span class="r5"> • </span>docs: Add pikapods.com as installation option (#676) - @m3nu in df19d39                                                                                  ┃
+┃  <span class="r5"> • </span>i18n: Add zh-TW Traditional Chinese locale (#689) - @PeterDaveHello in dcba3c4                                                                           ┃
+┃  <span class="r5"> • </span>fix(workers): Set a timeout on the screenshot call and completely skip it if screenshotting is disabled - @MohamedBassem in 6ccdbe5                      ┃
+┃  <span class="r5"> • </span>fix(workers): Don&#x27;t block connection to chrome when failing to download adblock list. #674 - @MohamedBassem in 378ad9b                                   ┃
+┃  <span class="r5"> • </span>chore(workers): Add extra logging for browser connection errors - @MohamedBassem in 393d097                                                              ┃
+┃  <span class="r5"> • </span>readme: Add github sponsor - @MohamedBassem in 5533632                                                                                                   ┃
+┃  <span class="r5"> • </span>docker: Preinstall pnpm for the worker job to prevent downloading it on startup. #666 - @MohamedBassem in ae78ef5                                        ┃
+┃  <span class="r5"> • </span>fix: Fix homepage not loading when hitting adding invalid URL during crawling. Fixes #626 - @MohamedBassem in dd20fb7                                    ┃
+┃  <span class="r5"> • </span>feature: Allow setting bookmark metadata during creation - @MohamedBassem in 82cd3bb                                                                     ┃
+┃  <span class="r5"> • </span>docs: fix typo in inference.ts (#640) - @eltociear in 64e759a                                                                                            ┃
+┃  <span class="r5"> • </span>translations: Add german, french and chinese LLM translations - @MohamedBassem in 0d6af2f                                                                ┃
+┃  <span class="r5"> • </span>feature: Add i18n support. Fixes #57 (#635) - @MohamedBassem in 4354ee7                                                                                  ┃
+┃  <span class="r5"> • </span>docker: Upgrade meilisearch to v1.11.1 (#629) - @wuast94 in 9f2c7be                                                                                      ┃
+┃  <span class="r5"> • </span>fix: Fix SummarizeWithAI button to use an ActionButton - @MohamedBassem in d73f001                                                                       ┃
+┃  <span class="r5"> • </span>docs: Release the 0.19 docs - @MohamedBassem in bff02d6                                                                                                  ┃
+┃  <span class="r5"> • </span>readme: Add RSS, REST API and video archival to README - @MohamedBassem in 6ccaec9                                                                       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+</code></pre>
+</body>
+</html>
