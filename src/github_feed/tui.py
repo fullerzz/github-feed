@@ -7,6 +7,7 @@ from textual.widgets import Button, Header
 
 from github_feed.components.env_var_panel import EnvVarPanel
 from github_feed.components.metadata_panel import MetadataPanel
+from github_feed.components.releases_list import ReleasesList
 
 
 class Home(Screen):  # type: ignore[type-arg]
@@ -33,18 +34,7 @@ class Releases(Screen):  # type: ignore[type-arg]
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Vertical(
-            Horizontal(
-                EnvVarPanel(shrink=True, id="envVarPanel"),
-                MetadataPanel(400, id="metadataPanel"),
-                classes="row",
-            ),
-            Horizontal(
-                Button("Check for New Releases", id="checkReleases", variant="primary"),
-                Button("Refresh List of Starred Repos", id="checkStarred", variant="error"),
-                classes="row",
-            ),
-        )
+        yield Vertical(ReleasesList())
 
 
 class GitHubFeed(App[str]):
