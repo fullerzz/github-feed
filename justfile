@@ -8,4 +8,4 @@ run:
     uv run python src/github_feed/app.py
 
 tui:
-    uv run textual run src/github_feed/tui.py
+    uv run textual run --dev src/github_feed/tui.py

@@ -1,17 +1,27 @@
 Static {
     content-align: center middle;
-    background: crimson;
     border: solid darkred;
-    height: 1fr;
 }
 
 Screen {
     layout: vertical;
-    content-align: center middle;
+    align: center middle;
+}
+
+#envVarPanel {
+    height: 1fr;
+    width: 50%;
+}
+
+#starredReposCount {
+    height: 1fr;
+    width: 50%;
 }
 
 .row {
+    # content-align: center middle;
     content-align: center middle;
     height: 1fr;
     background: gray;
+    align: center middle;
 }
