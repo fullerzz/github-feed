@@ -48,3 +48,9 @@ def parse_link_header(headers: urllib3.HTTPHeaderDict) -> LinkHeader:
                 links["last"] = last
         return LinkHeader(**links)
     return LinkHeader()
+
+
+def extract_repo_name_from_html_url(html_url: str) -> str:
+    # Example: https://github.com/leptos-rs/leptos/releases/tag/v0.7.2
+    url_parts = html_url.split("/")
+    return url_parts[-4]

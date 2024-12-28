@@ -3,12 +3,12 @@ from datetime import datetime
 
 from sqlmodel import Session, SQLModel, create_engine, select
 
-from github_feed.sql.models import Repository, User
+from github_feed.sql.models import Repository, RunData, User
 
 
 class DbClient:
     def __init__(self, db_url: str) -> None:
-        self.engine = create_engine(db_url, echo=True)
+        self.engine = create_engine(db_url, echo=False)
         SQLModel.metadata.create_all(self.engine)
 
     def add_user(self, user: User) -> None:
@@ -28,3 +28,16 @@ class DbClient:
             )
             results = session.exec(statement)
             return results.all()
+
+    def store_run(self, timestamp: datetime) -> None:
+        with Session(self.engine) as session:
+            session.add(RunData(executed_at=timestamp))
+            session.commit()
+
+    def get_last_run(self) -> RunData | None:
+        # FIXME: This should order by executed_at and return the most recent RunData
+        with Session(self.engine) as session:
+            statement = select(RunData).order_by(RunData.executed_at.isoformat())
+            results = session.exec(statement)
+            data = results.first()
+            return data
