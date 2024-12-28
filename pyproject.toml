@@ -14,6 +14,7 @@ dependencies = [
     "pydantic>=2.10.4",
     "rich>=13.9.4",
     "sqlmodel>=0.0.22",
+    "textual>=1.0.0",
     "urllib3>=2.3.0",
 ]
 
@@ -26,6 +27,7 @@ dev = [
     "datamodel-code-generator>=0.26.4",
     "mypy~=1.13.0",
     "ruff>=0.8.4",
+    "textual-dev>=1.7.0",
 ]
 
 [tool.uv]

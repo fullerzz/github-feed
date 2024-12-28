@@ -1,0 +1,17 @@
+Static {
+    content-align: center middle;
+    background: crimson;
+    border: solid darkred;
+    height: 1fr;
+}
+
+Screen {
+    layout: vertical;
+    content-align: center middle;
+}
+
+.row {
+    content-align: center middle;
+    height: 1fr;
+    background: gray;
+}
