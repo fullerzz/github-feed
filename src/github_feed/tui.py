@@ -1,13 +1,16 @@
+from typing import ClassVar
+
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
+from textual.screen import Screen
 from textual.widgets import Button, Header
 
 from github_feed.components.env_var_panel import EnvVarPanel
 from github_feed.components.metadata_panel import MetadataPanel
 
 
-class GitHubFeed(App[str]):
-    CSS_PATH = "css/tui.tcss"
+class Home(Screen):  # type: ignore[type-arg]
+    BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -23,6 +26,15 @@ class GitHubFeed(App[str]):
                 classes="row",
             ),
         )
+
+
+class GitHubFeed(App[str]):
+    CSS_PATH = "css/tui.tcss"
+    BINDINGS: ClassVar = [("b", "push_screen('home')", "HOME")]
+
+    def on_mount(self) -> None:
+        self.install_screen(Home(), name="home")
+        self.push_screen("home")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         button_id = event.button.id
