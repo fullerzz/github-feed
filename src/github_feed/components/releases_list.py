@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from textual import work
 from textual.app import ComposeResult
 from textual.widget import Widget
-from textual.widgets import Collapsible, Label, Link, ListItem, ListView, Markdown
+from textual.widgets import Collapsible, Label, Link, ListItem, ListView, MarkdownViewer
 
 from github_feed.app import get_db_client
 from github_feed.github_client import GitHubClient
@@ -59,5 +59,11 @@ class ReleasesList(Widget):
             repo_name = extract_repo_name_from_html_url(release.html_url)
             title = f"[bold]{repo_name}[/bold] - {release.tag_name}"
             releases_list.append(
-                ListItem(Collapsible(Link(release.html_url, url=release.html_url), Markdown(release.body), title=title))
+                ListItem(
+                    Collapsible(
+                        Link(release.html_url, url=release.html_url, tooltip="View release on GitHub"),
+                        MarkdownViewer(release.body),
+                        title=title,
+                    )
+                )
             )
