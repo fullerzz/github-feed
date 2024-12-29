@@ -38,9 +38,6 @@ class ReleasesList(Widget):
     async def on_mount(self) -> None:
         list_view = self.query_one("#releasesList", ListView)
         list_view.loading = True
-        # """Called when the input changes"""
-        # self.log.info("CLICK CLICK CLICK :D")
-        # self.update_releases()
 
     @on(Show)
     def handle_screen_resume(self) -> None:
@@ -49,7 +46,7 @@ class ReleasesList(Widget):
     @work(exclusive=True, thread=True)
     def update_releases(self) -> None:
         worker = get_current_worker()
-        recently_updated = self.db.get_updated_repos(datetime.now(UTC) - timedelta(hours=24))
+        recently_updated = self.db.get_updated_repos(datetime.now(UTC) - timedelta(hours=48))
         token = environ["GITHUB_TOKEN"]
         client = GitHubClient(token)
         releases: list[Release] = []
@@ -63,33 +60,25 @@ class ReleasesList(Widget):
                         releases.append(latest_release)
                 except ValidationError:
                     self.log.warning(f"Error validating release: {repo.name}")
-        # TODO: Use releases to update the ListView
+        self.rebuild_table(releases=releases)
+
+    @work(exclusive=True)
+    async def rebuild_table(self, releases: list[Release]) -> None:
         releases_list = self.query_one("#releasesList", ListView)
 
-        if not worker.is_cancelled:
-            # releases_list.clear()
-            # self.log.info(f"After clearing: {releases_list=}")
-            for release in releases:
-                repo_name = extract_repo_name_from_html_url(release.html_url)
-                title = f"[bold]{repo_name}[/bold] - {release.tag_name}"
-                self.app.call_from_thread(
-                    releases_list.append,
-                    ListItem(
-                        Collapsible(
-                            Link(release.html_url, url=release.html_url, tooltip="View release on GitHub"),
-                            MarkdownViewer(release.body),
-                            title=title,
-                        )
-                    ),
+        releases_list.clear()
+        self.log.info(f"After clearing: {releases_list=}")
+        for release in releases:
+            repo_name = extract_repo_name_from_html_url(release.html_url)
+            title = f"[bold]{repo_name}[/bold] - {release.tag_name}"
+            releases_list.append(
+                ListItem(
+                    Collapsible(
+                        Link(release.html_url, url=release.html_url, tooltip="View release on GitHub"),
+                        MarkdownViewer(release.body),
+                        title=title,
+                    )
                 )
-                # releases_list.append(
-                #     ListItem(
-                #         Collapsible(
-                #             Link(release.html_url, url=release.html_url, tooltip="View release on GitHub"),
-                #             MarkdownViewer(release.body),
-                #             title=title,
-                #         )
-                #     )
-                # )
-            self.app.call_from_thread(releases_list.set_loading, False)
-            self.app.call_from_thread(self.post_message, self.DataLoaded(loaded=True))
+            )
+        releases_list.loading = False
+        self.post_message(self.DataLoaded(loaded=True))
