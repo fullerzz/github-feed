@@ -12,35 +12,23 @@ from github_feed.github_client import GitHubClient
 from github_feed.models import Release
 from github_feed.sql.client import DbClient
 
-JESSICA = """
-# Lady Jessica
 
-Bene Gesserit and concubine of Leto, and mother of Paul and Alia.
-"""
-
-names = ["Paul", "Leto", "Alia", "Ghanima", "Irulan", "Chani", "Stilgar", "Duncan", "Thufir", "Gurney"]
-
-
-# FIXME: This is a WIP. Currently, struggling to use a worker to update the ListView items
-# with results from the GitHub API.
 class ReleasesList(Widget):
     def __init__(self, **kwargs: Any) -> None:
         self.db = DbClient(f"sqlite:///{environ['DB_FILENAME']}")
         super().__init__(**kwargs)
 
     def compose(self) -> ComposeResult:
-        items: list[ListItem] = [
-            ListItem(Collapsible(Label(f"Nested content for {name}"), title=name)) for name in names
-        ]
-
         yield ListView(
-            ListItem(Label("1")),
-            ListItem(Label("2")),
-            ListItem(Collapsible(Markdown(JESSICA), collapsed=False, title="Jessica")),
-            *items,
+            ListItem(Collapsible(Label("Nested content for Zach"), title="Zach")),
+            ListItem(Collapsible(Label("Nested content for Nicole"), title="Nicole")),
             id="releasesList",
             name="releasesList",
         )
+
+    async def on_mount(self) -> None:
+        """Called when the input changes"""
+        self.log.info("CLICK CLICK CLICK :D")
         self.update_releases()
 
     @work(exclusive=True)
