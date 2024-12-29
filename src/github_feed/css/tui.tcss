@@ -1,6 +1,5 @@
 Static {
-    content-align: center middle;
-    border: solid darkred;
+    # content-align: center middle;
 }
 
 Screen {

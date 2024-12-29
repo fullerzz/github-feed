@@ -54,16 +54,16 @@ def check_updates(db: DbClient, last_checked: datetime | None) -> None:
 
 def main() -> None:
     db = DbClient(f"sqlite:///{environ['DB_FILENAME']}")
-    last_run: RunData | None = db.get_last_run()
+    # last_run: RunData | None = db.get_last_run()
     # TODO: Enable the below commented lines based on env var or command line arg
-    # starred_repos = retrieve_activity()
-    # populate_table(starred_repos, db)
+    starred_repos = retrieve_activity()
+    populate_table(starred_repos, db)
     # if last_run:
     #     check_updates(db, last_run.executed_at)
     # else:
     #     check_updates(db, None)
     check_updates(db, None)
-    db.store_run(datetime.now(UTC))
+    # db.store_run(datetime.now(UTC))
 
 
 if __name__ == "__main__":
