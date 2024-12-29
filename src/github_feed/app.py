@@ -12,7 +12,6 @@ from github_feed.github_client import GitHubClient
 from github_feed.models import Release, Repository
 from github_feed.sql.client import DbClient
 from github_feed.sql.models import Repository as SqlRepository
-from github_feed.sql.models import RunData
 
 install(show_locals=False)
 

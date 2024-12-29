@@ -1,11 +1,10 @@
-from os import environ
 from typing import Any, ClassVar
 
 from textual import work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Button, Header, Label, DataTable, Link, LoadingIndicator
+from textual.widgets import Button, DataTable, Header, Label
 
 from github_feed.app import get_db_client, populate_table, retrieve_activity
 from github_feed.components.env_var_panel import EnvVarPanel
