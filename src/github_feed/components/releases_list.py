@@ -32,7 +32,7 @@ class ReleasesList(Widget):
         self.log.info("CLICK CLICK CLICK :D")
         self.update_releases()
 
-    @work(exclusive=True)
+    @work
     async def update_releases(self) -> None:
         recently_updated = self.db.get_updated_repos(datetime.now(UTC) - timedelta(hours=8))
         token = environ["GITHUB_TOKEN"]

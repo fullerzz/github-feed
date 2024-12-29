@@ -5,7 +5,7 @@ from textual import work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Button, Header, Label, DataTable, Link
+from textual.widgets import Button, Header, Label, DataTable, Link, LoadingIndicator
 
 from github_feed.app import get_db_client, populate_table, retrieve_activity
 from github_feed.components.env_var_panel import EnvVarPanel
@@ -57,7 +57,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
         self.log.info("Retrieving starred repos")
         self.populate_initial_table()
 
-    @work(exclusive=True)
+    @work
     async def populate_initial_table(self) -> None:
         starred_repos = self.db.get_starred_repos()
         self.notify(f"Retrieved {len(starred_repos)} starred repos from the database")
@@ -73,7 +73,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
                 repo.description,
             )
 
-    @work(exclusive=True)
+    @work
     async def refresh_starred_repos(self) -> None:
         # TODO: Add way to invoke this method
         starred_repos = retrieve_activity()
@@ -114,7 +114,8 @@ class GitHubFeed(App[str]):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         button_id = event.button.id
         if button_id == "checkReleases":
-            self.notify("Check releases button pressed!")
+            self.notify("Loading new releases in background...")
+            self.push_screen("releases")
         elif button_id == "checkStarred":
             self.notify("Check starred button pressed!")
 
