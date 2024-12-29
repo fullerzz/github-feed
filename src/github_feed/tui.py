@@ -1,10 +1,12 @@
 from typing import Any, ClassVar
 
-from textual import work
+from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
+from textual.events import ScreenResume
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Header, Label
+from textual.worker import Worker, get_current_worker
 
 from github_feed.app import get_db_client, populate_table, retrieve_activity
 from github_feed.components.env_var_panel import EnvVarPanel
@@ -37,7 +39,19 @@ class Releases(Screen):  # type: ignore[type-arg]
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Vertical(ReleasesList())
+        # TODO: Display loading indicator while the data is being fetched
+        yield Vertical(Label("Fresh Releases from GitHub"), ReleasesList())
+
+    async def on_mount(self) -> None:
+        # Set LoadingIndicator.visible to True
+        releases_list = self.query_one(ReleasesList)
+        releases_list.loading = True
+
+    @on(ReleasesList.DataLoaded)
+    def handle_release_data_loaded(self, event: ReleasesList.DataLoaded) -> None:
+        self.log.info(f"{event=}")
+        releases_list = self.query_one(ReleasesList)
+        releases_list.loading = False
 
 
 class StarredRepos(Screen):  # type: ignore[type-arg]
@@ -52,27 +66,38 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
         yield Vertical(Label("Starred Repos"), DataTable(zebra_stripes=True, id="starredRepos"))
 
     async def on_mount(self) -> None:
-        # TODO: Retrieve starred repos
-        self.log.info("Retrieving starred repos")
+        # Set DataTable.loading to True
+        data_table = self.query_one(DataTable)
+        data_table.loading = True
+
+    @on(ScreenResume)
+    def handle_screen_resume(self) -> None:
         self.populate_initial_table()
 
-    @work
-    async def populate_initial_table(self) -> None:
+    @work(exclusive=True, thread=True)
+    def populate_initial_table(self) -> None:
+        worker = get_current_worker()
         starred_repos = self.db.get_starred_repos()
-        self.notify(f"Retrieved {len(starred_repos)} starred repos from the database")
-        table = self.query_one("#starredRepos", DataTable)
-        table.add_columns("Name", "Link", "Language", "Stargazers", "Updated At", "Description")
-        for repo in starred_repos:
-            table.add_row(
-                repo.name,
-                f"[link]{repo.html_url}[/link]",
-                repo.language,
-                repo.stargazers_count,
-                repo.updated_at,
-                repo.description,
-            )
+        data_table = self.query_one(DataTable)
+        if not worker.is_cancelled:
+            self.app.call_from_thread(self.notify, f"Retrieved {len(starred_repos)} starred repos from the database")
+            data_table.add_columns("Name", "Link", "Language", "Stargazers", "Updated At", "Description")
+            for repo in starred_repos:
+                self.app.call_from_thread(
+                    data_table.add_row,
+                    repo.name,
+                    f"[link]{repo.html_url}[/link]",
+                    repo.language,
+                    repo.stargazers_count,
+                    repo.updated_at,
+                    repo.description,
+                )
+        if not worker.is_cancelled:
+            data_table.loading = False
+            self.log.info("Updated data table loading state to False")
+            self.log.info(f"{data_table=}")
 
-    @work
+    @work(exclusive=True)
     async def refresh_starred_repos(self) -> None:
         # TODO: Add way to invoke this method
         starred_repos = retrieve_activity()
@@ -95,6 +120,10 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
                 repo.updated_at,
             )
 
+    def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
+        """Called when the worker state changes."""
+        self.log(event)
+
 
 class GitHubFeed(App[str]):
     CSS_PATH = "css/tui.tcss"
@@ -104,19 +133,23 @@ class GitHubFeed(App[str]):
         ("s", "push_screen('starred_repos')", "STARRED REPOS"),
     ]
 
-    def on_mount(self) -> None:
+    async def on_mount(self) -> None:
         self.install_screen(Home(), name="home")
         self.install_screen(Releases(), name="releases")
         self.install_screen(StarredRepos(), name="starred_repos")
         self.push_screen("home")
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
+    async def on_button_pressed(self, event: Button.Pressed) -> None:
         button_id = event.button.id
         if button_id == "checkReleases":
             self.notify("Loading new releases in background...")
-            self.push_screen("releases")
         elif button_id == "checkStarred":
             self.notify("Check starred button pressed!")
+            self.load_starred_repos_screen()
+
+    @work(exclusive=True)
+    async def load_starred_repos_screen(self) -> None:
+        self.push_screen("starred_repos")
 
 
 if __name__ == "__main__":
