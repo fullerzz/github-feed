@@ -6,16 +6,17 @@ from pydantic import ValidationError
 from textual import work
 from textual.app import ComposeResult
 from textual.widget import Widget
-from textual.widgets import Collapsible, Label, ListItem, ListView, Markdown
+from textual.widgets import Collapsible, Label, Link, ListItem, ListView, Markdown
 
+from github_feed.app import get_db_client
 from github_feed.github_client import GitHubClient
 from github_feed.models import Release
-from github_feed.sql.client import DbClient
+from github_feed.utils import extract_repo_name_from_html_url
 
 
 class ReleasesList(Widget):
     def __init__(self, **kwargs: Any) -> None:
-        self.db = DbClient(f"sqlite:///{environ['DB_FILENAME']}")
+        self.db = get_db_client()
         super().__init__(**kwargs)
 
     def compose(self) -> ComposeResult:
@@ -55,4 +56,8 @@ class ReleasesList(Widget):
         releases_list.clear()
         self.log.info(f"After clearing: {releases_list=}")
         for release in releases:
-            releases_list.append(ListItem(Collapsible(Markdown(release.body), title=release.tag_name)))
+            repo_name = extract_repo_name_from_html_url(release.html_url)
+            title = f"[bold]{repo_name}[/bold] - {release.tag_name}"
+            releases_list.append(
+                ListItem(Collapsible(Link(release.html_url, url=release.html_url), Markdown(release.body), title=title))
+            )

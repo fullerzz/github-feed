@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from functools import cache
 from os import environ
 
 from pydantic import ValidationError
@@ -14,6 +15,11 @@ from github_feed.sql.models import Repository as SqlRepository
 from github_feed.sql.models import RunData
 
 install(show_locals=False)
+
+
+@cache
+def get_db_client() -> DbClient:
+    return DbClient(f"sqlite:///{environ['DB_FILENAME']}")
 
 
 def retrieve_activity() -> list[Repository]:
@@ -53,7 +59,7 @@ def check_updates(db: DbClient, last_checked: datetime | None) -> None:
 
 
 def main() -> None:
-    db = DbClient(f"sqlite:///{environ['DB_FILENAME']}")
+    db = get_db_client()
     # last_run: RunData | None = db.get_last_run()
     # TODO: Enable the below commented lines based on env var or command line arg
     starred_repos = retrieve_activity()
