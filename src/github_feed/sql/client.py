@@ -21,6 +21,12 @@ class DbClient:
             session.add(repository)
             session.commit()
 
+    def get_starred_repos(self) -> Sequence[Repository]:
+        with Session(self.engine) as session:
+            statement = select(Repository)
+            results = session.exec(statement)
+            return results.all()
+
     def get_updated_repos(self, start_date: datetime) -> Sequence[Repository]:
         with Session(self.engine) as session:
             statement = (
