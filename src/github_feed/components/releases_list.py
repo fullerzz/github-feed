@@ -34,7 +34,7 @@ class ReleasesList(Widget):
 
     @work(exclusive=True)
     async def update_releases(self) -> None:
-        recently_updated = self.db.get_updated_repos(datetime.now(UTC) - timedelta(hours=8))
+        recently_updated = self.db.get_updated_repos(datetime.now(UTC) - timedelta(hours=24))
         token = environ["GITHUB_TOKEN"]
         client = GitHubClient(token)
         releases: list[Release] = []

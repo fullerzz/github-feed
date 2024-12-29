@@ -5,8 +5,9 @@ from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.events import ScreenResume
+from textual.lazy import Lazy
 from textual.screen import Screen
-from textual.widgets import Button, DataTable, Header, Label
+from textual.widgets import Button, DataTable, Header, Label, LoadingIndicator
 from textual.worker import Worker, get_current_worker
 
 from github_feed.app import get_db_client, populate_table, retrieve_activity
@@ -40,7 +41,10 @@ class Releases(Screen):  # type: ignore[type-arg]
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Vertical(ReleasesList())
+        # TODO: Display loading indicator while the data is being fetched
+        yield Vertical(LoadingIndicator(), Lazy(ReleasesList()))
+
+    # TODO: Add method that is invoked when ReleasesList is finished updating to remove the LoadingIndicator
 
 
 class StarredRepos(Screen):  # type: ignore[type-arg]
@@ -55,7 +59,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
         yield Vertical(Label("Starred Repos"), DataTable(zebra_stripes=True, id="starredRepos"))
 
     async def on_mount(self) -> None:
-        # TODO: Retrieve starred repos
+        # Set DataTable.loading to True
         data_table = self.query_one(DataTable)
         data_table.loading = True
 
