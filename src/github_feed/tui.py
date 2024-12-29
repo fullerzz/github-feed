@@ -3,7 +3,7 @@ from typing import ClassVar
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
-from textual.widgets import Button, Header
+from textual.widgets import Button, Header, Label
 
 from github_feed.components.env_var_panel import EnvVarPanel
 from github_feed.components.metadata_panel import MetadataPanel
@@ -37,13 +37,26 @@ class Releases(Screen):  # type: ignore[type-arg]
         yield Vertical(ReleasesList())
 
 
+class StarredRepos(Screen):  # type: ignore[type-arg]
+    BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Vertical(Label("Starred Repos"))
+
+
 class GitHubFeed(App[str]):
     CSS_PATH = "css/tui.tcss"
-    BINDINGS: ClassVar = [("b", "push_screen('home')", "HOME"), ("c", "push_screen('releases')", "RELEASES")]
+    BINDINGS: ClassVar = [
+        ("b", "push_screen('home')", "HOME"),
+        ("c", "push_screen('releases')", "RELEASES"),
+        ("s", "push_screen('starred_repos')", "STARRED REPOS"),
+    ]
 
     def on_mount(self) -> None:
         self.install_screen(Home(), name="home")
         self.install_screen(Releases(), name="releases")
+        self.install_screen(StarredRepos(), name="starred_repos")
         self.push_screen("home")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

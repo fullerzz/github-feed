@@ -48,7 +48,7 @@ class ReleasesList(Widget):
                 self.log.warning(f"Error validating release: {repo.name}")
             pass
         # TODO: Use releases to update the ListView
-        releases_list: ListView = self.query_one("#releasesList", ListView)  # type: ignore
+        releases_list: ListView = self.query_one("#releasesList", ListView)
         self.log.info(f"Found {len(releases)} new releases")
         self.log.info(f"{releases_list=}")
         self.log.info(f"{releases_list.children=}")
