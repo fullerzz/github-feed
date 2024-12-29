@@ -42,9 +42,28 @@ class Releases(Screen):  # type: ignore[type-arg]
     def compose(self) -> ComposeResult:
         yield Header()
         # TODO: Display loading indicator while the data is being fetched
-        yield Vertical(LoadingIndicator(), Lazy(ReleasesList()))
+        yield Vertical(Label("Fresh Releases from GitHub"), ReleasesList())
+
+    async def on_mount(self) -> None:
+        # Set LoadingIndicator.visible to True
+        releases_list = self.query_one(ReleasesList)
+        releases_list.loading = True
 
     # TODO: Add method that is invoked when ReleasesList is finished updating to remove the LoadingIndicator
+    @on(ReleasesList.DataLoaded)
+    def handle_release_data_loaded(self, event: ReleasesList.DataLoaded) -> None:
+        self.log.info(f"{event=}")
+        releases_list = self.query_one(ReleasesList)
+        releases_list.loading = False
+        # loading_indicator = self.query_one(LoadingIndicator)
+        # if event.loaded is True:
+        #     self.log.info("Releases data loaded!")
+        #     loading_indicator.visible = False
+        # else:
+        #     self.log.info("Releases data not yet loaded")
+        #     loading_indicator.visible = True
+        #     loading_indicator.classes = ["hidden"]
+        #     self.remove_children("LoadingIndicator")
 
 
 class StarredRepos(Screen):  # type: ignore[type-arg]
@@ -86,7 +105,6 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
                     repo.description,
                 )
         if not worker.is_cancelled:
-            sleep(2)
             data_table.loading = False
             self.log.info("Updated data table loading state to False")
             self.log.info(f"{data_table=}")
