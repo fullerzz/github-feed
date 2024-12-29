@@ -1,13 +1,11 @@
-from time import sleep
 from typing import Any, ClassVar
 
 from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.events import ScreenResume
-from textual.lazy import Lazy
 from textual.screen import Screen
-from textual.widgets import Button, DataTable, Header, Label, LoadingIndicator
+from textual.widgets import Button, DataTable, Header, Label
 from textual.worker import Worker, get_current_worker
 
 from github_feed.app import get_db_client, populate_table, retrieve_activity
@@ -49,21 +47,11 @@ class Releases(Screen):  # type: ignore[type-arg]
         releases_list = self.query_one(ReleasesList)
         releases_list.loading = True
 
-    # TODO: Add method that is invoked when ReleasesList is finished updating to remove the LoadingIndicator
     @on(ReleasesList.DataLoaded)
     def handle_release_data_loaded(self, event: ReleasesList.DataLoaded) -> None:
         self.log.info(f"{event=}")
         releases_list = self.query_one(ReleasesList)
         releases_list.loading = False
-        # loading_indicator = self.query_one(LoadingIndicator)
-        # if event.loaded is True:
-        #     self.log.info("Releases data loaded!")
-        #     loading_indicator.visible = False
-        # else:
-        #     self.log.info("Releases data not yet loaded")
-        #     loading_indicator.visible = True
-        #     loading_indicator.classes = ["hidden"]
-        #     self.remove_children("LoadingIndicator")
 
 
 class StarredRepos(Screen):  # type: ignore[type-arg]
@@ -87,7 +75,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
         self.populate_initial_table()
 
     @work(exclusive=True, thread=True)
-    def populate_initial_table(self) -> None:  # type: ignore[type-arg]
+    def populate_initial_table(self) -> None:
         worker = get_current_worker()
         starred_repos = self.db.get_starred_repos()
         data_table = self.query_one(DataTable)
