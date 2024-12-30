@@ -21,6 +21,17 @@ class DbClient:
             session.add(repository)
             session.commit()
 
+    def update_repository(self, repository: Repository) -> None:
+        with Session(self.engine) as session:
+            session.add(repository)
+            session.commit()
+
+    def get_repository(self, repo_id: int) -> Repository:
+        with Session(self.engine) as session:
+            statement = select(Repository).where(Repository.id == repo_id)
+            results = session.exec(statement)
+            return results.one()
+
     def get_starred_repos(self) -> Sequence[Repository]:
         with Session(self.engine) as session:
             statement = select(Repository)
