@@ -1,4 +1,4 @@
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Sequence
 
 from textual import on, work
 from textual.app import App, ComposeResult
@@ -9,6 +9,7 @@ from textual.widgets import Button, DataTable, Header, Label
 from textual.worker import Worker, get_current_worker
 
 from github_feed.app import get_db_client, populate_table, retrieve_activity
+from github_feed.engine import Engine
 from github_feed.components.env_var_panel import EnvVarPanel
 from github_feed.components.metadata_panel import MetadataPanel
 from github_feed.components.releases_list import ReleasesList
@@ -47,7 +48,7 @@ class Releases(Screen):  # type: ignore[type-arg]
         releases_list = self.query_one(ReleasesList)
         releases_list.loading = True
 
-    @on(ReleasesList.DataLoaded)
+    @on(ReleasesList.DataLoaded)        # TODO: Update this to initially populate the DataTable with values from the db
     def handle_release_data_loaded(self, event: ReleasesList.DataLoaded) -> None:
         self.log.info(f"{event=}")
         releases_list = self.query_one(ReleasesList)
@@ -58,7 +59,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
     BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
 
     def __init__(self, **kwargs: Any) -> None:
-        self.db = get_db_client()
+        self.engine = Engine()
         super().__init__(**kwargs)
 
     def compose(self) -> ComposeResult:
@@ -77,7 +78,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
     @work(exclusive=True, thread=True)
     def populate_initial_table(self) -> None:
         worker = get_current_worker()
-        starred_repos = self.db.get_starred_repos()
+        starred_repos = self.engine.retrieve_starred_repos()
         data_table = self.query_one(DataTable)
         if not worker.is_cancelled:
             self.app.call_from_thread(self.notify, f"Retrieved {len(starred_repos)} starred repos from the database")
@@ -100,13 +101,12 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
     @work(exclusive=True)
     async def refresh_starred_repos(self) -> None:
         # TODO: Add way to invoke this method
-        starred_repos = retrieve_activity()
-        populate_table(starred_repos, self.db)
+        starred_repos = self.engine.retrieve_starred_repos(refresh=True)
         # TODO: Update this to initially populate the DataTable with values from the db
         # Then, update the DataTable with the results from the API call
-        await self.populate_data_table(starred_repos)
+        await self.populate_data_table(starred_repos) # type: ignore # TODO: Fix and remove type-ignore comment
 
-    async def populate_data_table(self, starred_repos: list[Repository]) -> None:
+    async def populate_data_table(self, starred_repos: Sequence[Repository]) -> None:
         table = self.query_one("#starredRepos", DataTable)
         table.add_columns("Name", "Description", "Link", "Homepage", "Language", "Stargazers", "Updated At")
         for repo in starred_repos:

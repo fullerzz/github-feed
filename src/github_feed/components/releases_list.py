@@ -12,6 +12,7 @@ from textual.widgets import Collapsible, Label, Link, ListItem, ListView, Markdo
 from textual.worker import get_current_worker
 
 from github_feed.app import get_db_client
+from github_feed.engine import Engine
 from github_feed.github_client import GitHubClient
 from github_feed.models import Release
 from github_feed.utils import extract_repo_name_from_html_url
@@ -24,7 +25,7 @@ class ReleasesList(Widget):
             super().__init__()
 
     def __init__(self, **kwargs: Any) -> None:
-        self.db = get_db_client()
+        self.engine = Engine()
         super().__init__(**kwargs)
 
     def compose(self) -> ComposeResult:
@@ -46,21 +47,10 @@ class ReleasesList(Widget):
     @work(exclusive=True, thread=True)
     def update_releases(self) -> None:
         worker = get_current_worker()
-        recently_updated = self.db.get_updated_repos(datetime.now(UTC) - timedelta(hours=48))
-        token = environ["GITHUB_TOKEN"]
-        client = GitHubClient(token)
-        releases: list[Release] = []
         if not worker.is_cancelled:
-            # Iterate over recently updated repos and check for new releases
-            for repo in recently_updated:
-                self.log.info(f"Checking for new releases for repo: {repo.name}")
-                try:
-                    latest_release = client.get_latest_release(repo.releases_url)
-                    if latest_release.created_at > datetime.now(UTC) - timedelta(days=7):
-                        releases.append(latest_release)
-                except ValidationError:
-                    self.log.warning(f"Error validating release: {repo.name}")
-        self.rebuild_table(releases=releases)
+            self.engine.refresh_starred_repos()
+            releases = self.engine.retrieve_releases()
+            self.rebuild_table(releases=releases)
 
     @work(exclusive=True)
     async def rebuild_table(self, releases: list[Release]) -> None:
