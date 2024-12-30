@@ -1,5 +1,5 @@
+from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
-from typing import Sequence
 from functools import cache
 from os import getenv
 

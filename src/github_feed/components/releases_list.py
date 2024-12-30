@@ -1,8 +1,5 @@
-from datetime import UTC, datetime, timedelta
-from os import environ
 from typing import Any
 
-from pydantic import ValidationError
 from textual import on, work
 from textual.app import ComposeResult
 from textual.events import Show
@@ -11,9 +8,7 @@ from textual.widget import Widget
 from textual.widgets import Collapsible, Label, Link, ListItem, ListView, MarkdownViewer
 from textual.worker import get_current_worker
 
-from github_feed.app import get_db_client
 from github_feed.engine import Engine
-from github_feed.github_client import GitHubClient
 from github_feed.models import Release
 from github_feed.utils import extract_repo_name_from_html_url
 

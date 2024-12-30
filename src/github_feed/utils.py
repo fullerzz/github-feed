@@ -6,7 +6,6 @@ from github_feed.models import LinkHeader, Repository
 from github_feed.sql.models import Repository as SqlRepository
 
 
-
 def save_starred_repos(repos: list[Repository], filename: str) -> None:
     with pathlib.Path(filename).open("w") as file:
         file.write("[\n")
@@ -57,6 +56,7 @@ def extract_repo_name_from_html_url(html_url: str) -> str:
     # Example: https://github.com/leptos-rs/leptos/releases/tag/v0.7.2
     url_parts = html_url.split("/")
     return url_parts[-4]
+
 
 def update_existing_repo(existing: SqlRepository, fresh: Repository) -> SqlRepository:
     existing.description = fresh.description

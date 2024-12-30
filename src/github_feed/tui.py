@@ -1,4 +1,5 @@
-from typing import Any, ClassVar, Sequence
+from collections.abc import Sequence
+from typing import Any, ClassVar
 
 from textual import on, work
 from textual.app import App, ComposeResult
@@ -8,11 +9,10 @@ from textual.screen import Screen
 from textual.widgets import Button, DataTable, Header, Label
 from textual.worker import Worker, get_current_worker
 
-from github_feed.app import get_db_client, populate_table, retrieve_activity
-from github_feed.engine import Engine
 from github_feed.components.env_var_panel import EnvVarPanel
 from github_feed.components.metadata_panel import MetadataPanel
 from github_feed.components.releases_list import ReleasesList
+from github_feed.engine import Engine
 from github_feed.models import Repository
 
 
@@ -48,7 +48,7 @@ class Releases(Screen):  # type: ignore[type-arg]
         releases_list = self.query_one(ReleasesList)
         releases_list.loading = True
 
-    @on(ReleasesList.DataLoaded)        # TODO: Update this to initially populate the DataTable with values from the db
+    @on(ReleasesList.DataLoaded)  # TODO: Update this to initially populate the DataTable with values from the db
     def handle_release_data_loaded(self, event: ReleasesList.DataLoaded) -> None:
         self.log.info(f"{event=}")
         releases_list = self.query_one(ReleasesList)
@@ -104,7 +104,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
         starred_repos = self.engine.retrieve_starred_repos(refresh=True)
         # TODO: Update this to initially populate the DataTable with values from the db
         # Then, update the DataTable with the results from the API call
-        await self.populate_data_table(starred_repos) # type: ignore # TODO: Fix and remove type-ignore comment
+        await self.populate_data_table(starred_repos)  # type: ignore # TODO: Fix and remove type-ignore comment
 
     async def populate_data_table(self, starred_repos: Sequence[Repository]) -> None:
         table = self.query_one("#starredRepos", DataTable)
