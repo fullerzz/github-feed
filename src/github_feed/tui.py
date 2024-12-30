@@ -1,4 +1,4 @@
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Sequence
 
 from textual import on, work
 from textual.app import App, ComposeResult
@@ -101,13 +101,12 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
     @work(exclusive=True)
     async def refresh_starred_repos(self) -> None:
         # TODO: Add way to invoke this method
-        self.engine.refresh_starred_repos()
-        starred_repos = self.engine.retrieve_starred_repos()
+        starred_repos = self.engine.retrieve_starred_repos(refresh=True)
         # TODO: Update this to initially populate the DataTable with values from the db
         # Then, update the DataTable with the results from the API call
-        await self.populate_data_table(starred_repos)
+        await self.populate_data_table(starred_repos) # type: ignore # TODO: Fix and remove type-ignore comment
 
-    async def populate_data_table(self, starred_repos: list[Repository]) -> None:
+    async def populate_data_table(self, starred_repos: Sequence[Repository]) -> None:
         table = self.query_one("#starredRepos", DataTable)
         table.add_columns("Name", "Description", "Link", "Homepage", "Language", "Stargazers", "Updated At")
         for repo in starred_repos:

@@ -1,12 +1,14 @@
+from datetime import UTC, datetime, timedelta
 from typing import Sequence
 from functools import cache
 from os import getenv
 
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel, SecretStr, ValidationError
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
+from github_feed import utils
 from github_feed.github_client import GitHubClient
-from github_feed.models import Repository
+from github_feed.models import Release, Repository
 from github_feed.sql.client import DbClient
 from github_feed.sql.models import Repository as SqlRepository
 
@@ -63,11 +65,33 @@ class Engine:
         except IntegrityError:
             # Repo already exists in the db, so try to retrieve the existing row
             try:
-                existing_row = self.db.get_repository(repo.id)
+                existing_repo = self.db.get_repository(repo.id)
             except NoResultFound:
                 # TODO: Log this error and decide how to handle it
                 return None
-            raw_existing_repo = existing_row.model_dump()
-            updated_repo_data = raw_existing_repo | raw_repo  # Update existing data with fresh data from raw_repo
-            self.db.update_repository(SqlRepository(**updated_repo_data))
+            existing_repo = utils.update_existing_repo(existing_repo, repo)
+            self.db.update_repository(existing_repo)
             return None
+
+    def retrieve_releases(self, start_time: datetime | None = None) -> list[Release]:
+        """
+        Retrieve repositories that have been updated since the given start time.
+        If no start time is provided, a default of 2 days is used.
+        """
+        if start_time is None:
+            # Default to 2-day window
+            start_time = datetime.now(UTC) - timedelta(days=2)
+
+        updated_repos = self.db.get_updated_repos(start_time)
+
+        releases = []
+        for repo in updated_repos:
+            # FIXME: This logic doesn't work if there are multiple releases within the time window as only the latest release will be returned
+            try:
+                latest_release = self.gh_client.get_latest_release(repo.releases_url)
+                if latest_release.created_at > start_time:
+                    releases.append(latest_release)
+            except ValidationError:
+                # TODO: Log validation failure for repo
+                pass
+        return releases

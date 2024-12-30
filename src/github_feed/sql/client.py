@@ -25,6 +25,7 @@ class DbClient:
         with Session(self.engine) as session:
             session.add(repository)
             session.commit()
+            session.refresh(repository)
 
     def get_repository(self, repo_id: int) -> Repository:
         with Session(self.engine) as session:
