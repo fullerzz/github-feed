@@ -8,8 +8,24 @@ The [GitHub activity feed is broken](https://github.com/orgs/community/discussio
 - [x] Retrieve list of releases using GitHub REST API and display on console
 - [ ] Allow user to specify how far in the past to query for when finding releases
 - [ ] Cache release data locally to avoid needless GitHub API usage
-- [ ] Transform from basic CLI that uses [`rich`](https://github.com/Textualize/rich) to a TUI using [`textual`](https://github.com/Textualize/textual)
+- [x] Transform from basic CLI that uses [`rich`](https://github.com/Textualize/rich) to a TUI using [`textual`](https://github.com/Textualize/textual)
 
 ## Example Output
 
-![Console Output](releases.svg)
+### Home Screen
+
+![Home Screen](docs/imgs/home_screen.png)
+
+### Starred Repos Screen
+
+![Starred Repos Screen](docs/imgs/starred_repos.png)
+
+### Releases Screen
+
+#### Collapsed
+
+![Releases Screen - Collapsed](docs/imgs/releases_list_collapsed.png)
+
+#### Expanded
+
+![Releases Screen - Expanded](docs/imgs/releases_list_release_expanded.png)
