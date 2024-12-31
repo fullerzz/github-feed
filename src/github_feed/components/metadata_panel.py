@@ -5,7 +5,12 @@ from pydantic import BaseModel, ConfigDict
 from rich.align import Align
 from rich.console import RenderableType
 from rich.panel import Panel
+from textual import on, work
+from textual.events import Show
 from textual.widgets import Static
+from textual.worker import get_current_worker
+
+from github_feed.engine import Engine
 
 
 class PanelParts(BaseModel):
@@ -40,7 +45,10 @@ def build_panel_parts(starred_count: int, last_checked: datetime | None) -> Pane
 
 
 class MetadataPanel(Static):
-    def __init__(self, starred_repo_count: int, last_checked: datetime | None = None, **kwargs: Any) -> None:
+    def __init__(
+        self, engine: Engine, starred_repo_count: int, last_checked: datetime | None = None, **kwargs: Any
+    ) -> None:
+        self.engine = engine
         self.starred_repo_count = starred_repo_count
         self.last_checked = last_checked
         super().__init__(**kwargs)
@@ -49,3 +57,17 @@ class MetadataPanel(Static):
         panel_parts = build_panel_parts(self.starred_repo_count, self.last_checked)
         panel = Panel(panel_parts.body, title=panel_parts.title, expand=False, padding=(1, 1))
         self.update(panel)
+
+    @on(Show)
+    def handle_screen_resume(self) -> None:
+        self.load_metadata()
+
+    @work(exclusive=True, thread=True)
+    def load_metadata(self) -> None:
+        worker = get_current_worker()
+        if not worker.is_cancelled:
+            starred_repos_count = len(self.engine.retrieve_starred_repos())
+            last_checked = datetime.now()
+            panel_parts = build_panel_parts(starred_repos_count, last_checked)
+            panel = Panel(panel_parts.body, title=panel_parts.title, expand=False, padding=(1, 1))
+            self.app.call_from_thread(self.update, panel)

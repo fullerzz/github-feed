@@ -4,7 +4,7 @@ from typing import Any, ClassVar
 from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.events import ScreenResume
+from textual.events import Ready, ScreenResume
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Header, Label
 from textual.worker import Worker, get_current_worker
@@ -19,17 +19,21 @@ from github_feed.models import Repository
 class Home(Screen):  # type: ignore[type-arg]
     BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
 
+    def __init__(self, **kwargs: Any) -> None:
+        self.engine = Engine()
+        super().__init__(**kwargs)
+
     def compose(self) -> ComposeResult:
         yield Header()
         yield Vertical(
             Horizontal(
                 EnvVarPanel(shrink=True, id="envVarPanel"),
-                MetadataPanel(323, id="metadataPanel"),
+                MetadataPanel(self.engine, 323, id="metadataPanel"),
                 classes="row",
             ),
             Horizontal(
                 Button("Check for New Releases", id="checkReleases", variant="primary"),
-                Button("Refresh List of Starred Repos", id="checkStarred", variant="error"),
+                Button("Refresh List of Starred Repos", id="checkStarred", variant="default"),
                 classes="row",
             ),
         )
@@ -133,7 +137,12 @@ class GitHubFeed(App[str]):
         ("s", "push_screen('starred_repos')", "STARRED REPOS"),
     ]
 
+    def __init__(self, **kwargs: Any) -> None:
+        self.engine = Engine()
+        super().__init__(**kwargs)
+
     async def on_mount(self) -> None:
+        self.theme = "tokyo-night"
         self.install_screen(Home(), name="home")
         self.install_screen(Releases(), name="releases")
         self.install_screen(StarredRepos(), name="starred_repos")
