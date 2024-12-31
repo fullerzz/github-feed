@@ -165,7 +165,7 @@ class GitHubFeed(App[str]):
 
     @work(exclusive=True)
     async def load_starred_releases_screen(self) -> None:
-        self.push_screen("relesaes")
+        self.push_screen("releases")
 
 
 if __name__ == "__main__":
