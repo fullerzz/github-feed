@@ -26,6 +26,10 @@ build-backend = "hatchling.build"
 dev = [
     "datamodel-code-generator>=0.26.4",
     "mypy~=1.13.0",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.0",
+    "pytest-socket>=0.7.0",
+    "pytest-textual-snapshot>=1.0.0",
     "ruff>=0.8.4",
     "textual-dev>=1.7.0",
 ]
@@ -67,8 +71,9 @@ addopts = [
     "--import-mode=importlib",
     "--disable-socket",
     "--color=yes",
-    "--cov=src/gurlon",
+    "--asyncio-mode=auto"
 ]
+asyncio_default_fixture_loop_scope = "session"
 markers = [
     "no_mock_export_pitr: Disable mock export PITR autouse fixture",
 ]

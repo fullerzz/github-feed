@@ -12,6 +12,8 @@ from github_feed.models import Release, Repository
 from github_feed.sql.client import DbClient
 from github_feed.sql.models import Repository as SqlRepository
 
+DEFAULT_DB_FILENAME = "stargazing.db"
+
 
 @cache
 def get_db_client(filename: str) -> DbClient:
@@ -19,7 +21,7 @@ def get_db_client(filename: str) -> DbClient:
 
 
 class Config(BaseModel):
-    db_filename: str = "stargazing.db"
+    db_filename: str = DEFAULT_DB_FILENAME
     github_token: SecretStr
 
 
