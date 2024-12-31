@@ -15,3 +15,6 @@ wheels/
 
 starred_repos.json
 *.db
+
+.dmypy.json
+

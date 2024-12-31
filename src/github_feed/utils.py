@@ -3,6 +3,7 @@ import pathlib
 import urllib3
 
 from github_feed.models import LinkHeader, Repository
+from github_feed.sql.models import Repository as SqlRepository
 
 
 def save_starred_repos(repos: list[Repository], filename: str) -> None:
@@ -51,6 +52,22 @@ def parse_link_header(headers: urllib3.HTTPHeaderDict) -> LinkHeader:
 
 
 def extract_repo_name_from_html_url(html_url: str) -> str:
+    # FIXME: See https://github.com/fullerzz/github-feed/issues/9
     # Example: https://github.com/leptos-rs/leptos/releases/tag/v0.7.2
     url_parts = html_url.split("/")
     return url_parts[-4]
+
+
+def update_existing_repo(existing: SqlRepository, fresh: Repository) -> SqlRepository:
+    existing.description = fresh.description
+    existing.stargazers_count = fresh.stargazers_count
+    existing.forks_count = fresh.forks_count
+    existing.watchers_count = fresh.watchers_count
+    existing.watchers = fresh.watchers
+    existing.pushed_at = fresh.pushed_at
+    existing.updated_at = fresh.updated_at
+    existing.homepage = fresh.homepage
+    existing.size = fresh.size
+    existing.open_issues = fresh.open_issues
+    existing.open_issues_count = fresh.open_issues_count
+    return existing
