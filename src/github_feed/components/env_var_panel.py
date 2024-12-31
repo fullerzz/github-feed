@@ -35,7 +35,7 @@ def _build_db_filename_line() -> str:
 def _build_body() -> RenderableType:
     line_1 = _build_github_token_line()
     line_2 = _build_db_filename_line()
-    body_lines = "\n".join([line_1, line_2])
+    body_lines = "\n".join([line_1, "", line_2])
     return Align.center(body_lines)
 
 

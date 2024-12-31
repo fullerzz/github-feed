@@ -4,9 +4,9 @@ from typing import Any, ClassVar
 from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.events import Ready, ScreenResume
+from textual.events import ScreenResume
 from textual.screen import Screen
-from textual.widgets import Button, DataTable, Header, Label
+from textual.widgets import Button, DataTable, Footer, Header, Label
 from textual.worker import Worker, get_current_worker
 
 from github_feed.components.env_var_panel import EnvVarPanel
@@ -17,7 +17,7 @@ from github_feed.models import Repository
 
 
 class Home(Screen):  # type: ignore[type-arg]
-    BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
+    # BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
 
     def __init__(self, **kwargs: Any) -> None:
         self.engine = Engine()
@@ -37,6 +37,7 @@ class Home(Screen):  # type: ignore[type-arg]
                 classes="row",
             ),
         )
+        yield Footer()
 
 
 class Releases(Screen):  # type: ignore[type-arg]
@@ -44,15 +45,15 @@ class Releases(Screen):  # type: ignore[type-arg]
 
     def compose(self) -> ComposeResult:
         yield Header()
-        # TODO: Display loading indicator while the data is being fetched
         yield Vertical(Label("Fresh Releases from GitHub"), ReleasesList())
+        yield Footer()
 
     async def on_mount(self) -> None:
         # Set LoadingIndicator.visible to True
         releases_list = self.query_one(ReleasesList)
         releases_list.loading = True
 
-    @on(ReleasesList.DataLoaded)  # TODO: Update this to initially populate the DataTable with values from the db
+    @on(ReleasesList.DataLoaded)
     def handle_release_data_loaded(self, event: ReleasesList.DataLoaded) -> None:
         self.log.info(f"{event=}")
         releases_list = self.query_one(ReleasesList)
@@ -69,6 +70,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
     def compose(self) -> ComposeResult:
         yield Header()
         yield Vertical(Label("Starred Repos"), DataTable(zebra_stripes=True, id="starredRepos"))
+        yield Footer()
 
     async def on_mount(self) -> None:
         # Set DataTable.loading to True
@@ -152,6 +154,7 @@ class GitHubFeed(App[str]):
         button_id = event.button.id
         if button_id == "checkReleases":
             self.notify("Loading new releases in background...")
+            self.load_starred_releases_screen()
         elif button_id == "checkStarred":
             self.notify("Check starred button pressed!")
             self.load_starred_repos_screen()
@@ -159,6 +162,10 @@ class GitHubFeed(App[str]):
     @work(exclusive=True)
     async def load_starred_repos_screen(self) -> None:
         self.push_screen("starred_repos")
+
+    @work(exclusive=True)
+    async def load_starred_releases_screen(self) -> None:
+        self.push_screen("relesaes")
 
 
 if __name__ == "__main__":
