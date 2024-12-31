@@ -2,7 +2,7 @@ import pathlib
 
 import urllib3
 
-from github_feed.models import LinkHeader, Release, Repository
+from github_feed.models import LinkHeader, Repository
 from github_feed.sql.models import Repository as SqlRepository
 
 
