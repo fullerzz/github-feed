@@ -96,4 +96,5 @@ class Engine:
             except ValidationError:
                 # TODO: Log validation failure for repo
                 pass
+        releases.sort(key=lambda x: x.created_at, reverse=True)
         return releases

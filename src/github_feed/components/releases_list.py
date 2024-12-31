@@ -55,7 +55,9 @@ class ReleasesList(Widget):
         self.log.info(f"After clearing: {releases_list=}")
         for release in releases:
             repo_name = extract_repo_name_from_html_url(release.html_url)
-            title = f"[bold]{repo_name}[/bold] - {release.tag_name}"
+            title = (
+                f"[bold]{repo_name}[/bold] - {release.tag_name} - [bold]{release.created_at.strftime('%a %b %d %Y')}[/]"
+            )
             releases_list.append(
                 ListItem(
                     Collapsible(
