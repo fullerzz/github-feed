@@ -2,10 +2,11 @@ from typing import Any
 
 from textual import on, work
 from textual.app import ComposeResult
+from textual.containers import Center, Middle
 from textual.events import Show
 from textual.message import Message
 from textual.widget import Widget
-from textual.widgets import Collapsible, Label, Link, ListItem, ListView, MarkdownViewer
+from textual.widgets import Collapsible, Label, Link, ListItem, ListView, MarkdownViewer, ProgressBar
 from textual.worker import get_current_worker
 
 from github_feed.engine import Engine
@@ -24,6 +25,9 @@ class ReleasesList(Widget):
         super().__init__(**kwargs)
 
     def compose(self) -> ComposeResult:
+        with Center():
+            with Middle():
+                yield ProgressBar()
         yield ListView(
             ListItem(Collapsible(Label("Nested content for Zach"), title="Zach")),
             ListItem(Collapsible(Label("Nested content for Nicole"), title="Nicole")),
@@ -34,6 +38,9 @@ class ReleasesList(Widget):
     async def on_mount(self) -> None:
         list_view = self.query_one("#releasesList", ListView)
         list_view.loading = True
+
+    async def make_progress(self) -> None:
+        self.query_one(ProgressBar).advance(1)
 
     @on(Show)
     def handle_screen_resume(self) -> None:

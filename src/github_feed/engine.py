@@ -88,6 +88,8 @@ class Engine:
 
         releases = []
         for repo in updated_repos:
+            # TODO: Somehow publish message from here to update the progress bar
+            # or turn this into a generator that yields one release at a time back to the caller
             # FIXME: This logic doesn't work if there are multiple releases within the time window as only the latest release will be returned
             try:
                 latest_release = self.gh_client.get_latest_release(repo.releases_url)
