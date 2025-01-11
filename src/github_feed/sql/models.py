@@ -10,6 +10,23 @@ class RunData(SQLModel, table=True):
     executed_at: datetime
 
 
+class Release(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    html_url: str
+    assets_url: str
+    tarball_url: str
+    zipball_url: str
+    node_id: str
+    tag_name: str
+    target_commitish: str
+    name: str | None = None
+    body: str
+    draft: bool = False
+    prelease: bool = False
+    created_at: datetime
+    published_at: datetime
+
+
 class User(SQLModel, table=True):
     login: str
     id: int | None = Field(default=None, primary_key=True)

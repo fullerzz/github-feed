@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from textual import on, work
 from textual.app import ComposeResult
@@ -14,6 +14,10 @@ from github_feed.utils import extract_repo_name_from_html_url
 
 
 class ReleasesList(Widget):
+    BINDINGS: ClassVar = [
+        ("r", "update_releases", "Refresh list of starred repos"),
+    ]
+
     class DataLoaded(Message):
         def __init__(self, loaded: bool) -> None:
             self.loaded = loaded
@@ -37,15 +41,25 @@ class ReleasesList(Widget):
 
     @on(Show)
     def handle_screen_resume(self) -> None:
-        self.update_releases()
+        self.get_cached_releases()
 
     @work(exclusive=True, thread=True)
-    def update_releases(self) -> None:
+    def get_cached_releases(self) -> None:
         worker = get_current_worker()
         if not worker.is_cancelled:
-            self.engine.refresh_starred_repos()
             releases = self.engine.retrieve_releases()
-            self.rebuild_table(releases=releases)
+            self.app.call_from_thread(self.rebuild_table, releases)
+
+    @work(exclusive=True, thread=True)
+    def action_update_releases(self) -> None:
+        worker = get_current_worker()
+        if not worker.is_cancelled:
+            self.notify("Refreshing starred repos :D")
+            self.engine.refresh_starred_repos()
+            releases = self.engine.retrieve_fresh_releases()
+            list_view = self.query_one("#releasesList", ListView)
+            self.app.call_from_thread(list_view.set_loading, True)
+            self.app.call_from_thread(self.rebuild_table, releases)
 
     @work(exclusive=True)
     async def rebuild_table(self, releases: list[Release]) -> None:
