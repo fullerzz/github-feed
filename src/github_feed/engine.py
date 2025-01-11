@@ -10,6 +10,7 @@ from github_feed import utils
 from github_feed.github_client import GitHubClient
 from github_feed.models import Release, Repository
 from github_feed.sql.client import DbClient
+from github_feed.sql.models import Release as SqlRelease
 from github_feed.sql.models import Repository as SqlRepository
 
 DEFAULT_DB_FILENAME = "stargazing.db"
@@ -75,7 +76,21 @@ class Engine:
             self.db.update_repository(existing_repo)
             return None
 
-    def retrieve_releases(self, start_time: datetime | None = None) -> list[Release]:
+    def retrieve_releases(self, start_time: datetime | None = None) -> list[SqlRelease]:
+        """
+        Retrieve repositories that have been updated since the given start time.
+        If no start time is provided, a default of 2 days is used.
+        """
+        if start_time is None:
+            # Default to 2-day window
+            start_time = datetime.now(UTC) - timedelta(days=2)
+
+        releases = self.db.get_releases(start_time)
+        releases = list(releases)
+        releases.sort(key=lambda x: x.created_at, reverse=True)
+        return releases
+
+    def retrieve_fresh_releases(self, start_time: datetime | None = None) -> list[Release]:
         """
         Retrieve repositories that have been updated since the given start time.
         If no start time is provided, a default of 2 days is used.
@@ -87,14 +102,20 @@ class Engine:
         updated_repos = self.db.get_updated_repos(start_time)
 
         releases = []
+
         for repo in updated_repos:
             # FIXME: This logic doesn't work if there are multiple releases within the time window as only the latest release will be returned
             try:
                 latest_release = self.gh_client.get_latest_release(repo.releases_url)
                 if latest_release.created_at > start_time:
+                    self.db.add_release(SqlRelease(**latest_release.model_dump()))
                     releases.append(latest_release)
             except ValidationError:
                 # TODO: Log validation failure for repo
                 pass
+            except IntegrityError:
+                # We already have this release in the table
+                pass
+
         releases.sort(key=lambda x: x.created_at, reverse=True)
         return releases
