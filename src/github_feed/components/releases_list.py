@@ -28,12 +28,12 @@ class ReleasesList(Widget):
         with Center():
             with Middle():
                 yield ProgressBar()
-        yield ListView(
-            ListItem(Collapsible(Label("Nested content for Zach"), title="Zach")),
-            ListItem(Collapsible(Label("Nested content for Nicole"), title="Nicole")),
-            id="releasesList",
-            name="releasesList",
-        )
+                yield ListView(
+                    ListItem(Collapsible(Label("Nested content for Zach"), title="Zach")),
+                    ListItem(Collapsible(Label("Nested content for Nicole"), title="Nicole")),
+                    id="releasesList",
+                    name="releasesList",
+                )
 
     async def on_mount(self) -> None:
         list_view = self.query_one("#releasesList", ListView)
@@ -57,7 +57,8 @@ class ReleasesList(Widget):
     @work(exclusive=True)
     async def rebuild_table(self, releases: list[Release]) -> None:
         releases_list = self.query_one("#releasesList", ListView)
-
+        progress_bar = self.query_one(ProgressBar)
+        progress_bar.total = len(releases)
         releases_list.clear()
         self.log.info(f"After clearing: {releases_list=}")
         for release in releases:
@@ -74,5 +75,37 @@ class ReleasesList(Widget):
                     )
                 )
             )
+            await self.make_progress()
         releases_list.loading = False
+        progress_bar.remove()
+        self.notify("Releases list updated")
+
+        self.post_message(self.DataLoaded(loaded=True))
+
+    @work(exclusive=True)
+    async def rebuild_table_w_generator(self) -> None:
+        releases_list = self.query_one("#releasesList", ListView)
+        progress_bar = self.query_one(ProgressBar)
+        progress_bar.total = 350
+        releases_list.clear()
+        self.log.info(f"After clearing: {releases_list=}")
+        for release in self.engine.retrieve_releases_generator():
+            repo_name = extract_repo_name_from_html_url(release.html_url)
+            title = (
+                f"[bold]{repo_name}[/bold] - {release.tag_name} - [bold]{release.created_at.strftime('%a %b %d %Y')}[/]"
+            )
+            releases_list.append(
+                ListItem(
+                    Collapsible(
+                        Link(release.html_url, url=release.html_url, tooltip="View release on GitHub"),
+                        MarkdownViewer(release.body),
+                        title=title,
+                    )
+                )
+            )
+            await self.make_progress()
+        releases_list.loading = False
+        progress_bar.remove()
+        self.notify("Releases list updated")
+
         self.post_message(self.DataLoaded(loaded=True))

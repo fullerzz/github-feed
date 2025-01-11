@@ -1,4 +1,4 @@
-from collections.abc import Sequence
+from collections.abc import Generator, Sequence
 from datetime import UTC, datetime, timedelta
 from functools import cache
 from os import getenv
@@ -100,3 +100,26 @@ class Engine:
                 pass
         releases.sort(key=lambda x: x.created_at, reverse=True)
         return releases
+
+    def retrieve_releases_generator(self, start_time: datetime | None = None) -> Generator[Release]:
+        """
+        Retrieve repositories that have been updated since the given start time.
+        If no start time is provided, a default of 2 days is used.
+        """
+        if start_time is None:
+            # Default to 2-day window
+            start_time = datetime.now(UTC) - timedelta(days=2)
+
+        updated_repos = self.db.get_updated_repos(start_time)
+
+        for repo in updated_repos:
+            # TODO: Somehow publish message from here to update the progress bar
+            # or turn this into a generator that yields one release at a time back to the caller
+            # FIXME: This logic doesn't work if there are multiple releases within the time window as only the latest release will be returned
+            try:
+                latest_release = self.gh_client.get_latest_release(repo.releases_url)
+                if latest_release.created_at > start_time:
+                    yield latest_release
+            except ValidationError:
+                # TODO: Log validation failure for repo
+                pass
