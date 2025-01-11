@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlmodel import Session, SQLModel, create_engine, select
 
-from github_feed.sql.models import Repository, RunData, User
+from github_feed.sql.models import Release, Repository, RunData, User
 
 
 class DbClient:
@@ -16,6 +16,11 @@ class DbClient:
             session.add(user)
             session.commit()
 
+    def add_release(self, release: Release) -> None:
+        with Session(self.engine) as session:
+            session.add(release)
+            session.commit()
+
     def add_repository(self, repository: Repository) -> None:
         with Session(self.engine) as session:
             session.add(repository)
@@ -26,6 +31,12 @@ class DbClient:
             session.add(repository)
             session.commit()
             session.refresh(repository)
+
+    def get_releases(self, start_time: datetime) -> Sequence[Release]:
+        with Session(self.engine) as session:
+            statement = select(Release).where(Release.created_at > start_time)
+            results = session.exec(statement)
+            return results.all()
 
     def get_repository(self, repo_id: int) -> Repository:
         with Session(self.engine) as session:
