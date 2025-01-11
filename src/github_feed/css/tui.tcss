@@ -22,10 +22,12 @@ EnvVarPanel {
     align: center middle;
 }
 
-#checkReleases {
-    margin-right: 1;
+.column {
+    width: 1fr;
+    align: center middle;
 }
 
-#checkStarred {
-    margin-left: 1;
+#homeButtonsRow {
+    height: 1fr;
+    align: center middle;
 }

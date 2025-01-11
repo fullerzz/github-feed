@@ -6,8 +6,8 @@ from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.events import ScreenResume
 from textual.screen import Screen
-from textual.widgets import Button, DataTable, Footer, Header, Label
-from textual.worker import Worker, get_current_worker
+from textual.widgets import Button, Checkbox, DataTable, Footer, Header, Label
+from textual.worker import get_current_worker
 
 from github_feed.components.env_var_panel import EnvVarPanel
 from github_feed.components.metadata_panel import MetadataPanel
@@ -32,9 +32,18 @@ class Home(Screen):  # type: ignore[type-arg]
                 classes="row",
             ),
             Horizontal(
-                Button("Check for New Releases", id="checkReleases", variant="primary"),
-                Button("Refresh List of Starred Repos", id="checkStarred", variant="default"),
+                Vertical(Button("Check for New Releases", id="checkReleases", variant="primary"), classes="column"),
+                Vertical(
+                    Button("View List of Starred Repos", id="checkStarred", variant="default"),
+                    Checkbox(
+                        "Refresh",
+                        id="refreshStarred",
+                        tooltip="Call the GitHub API and refresh the list of starred repos",
+                    ),
+                    classes="column",
+                ),
                 classes="row",
+                id="homeButtonsRow",
             ),
         )
         yield Footer()
@@ -63,7 +72,8 @@ class Releases(Screen):  # type: ignore[type-arg]
 class StarredRepos(Screen):  # type: ignore[type-arg]
     BINDINGS: ClassVar = [("escape", "app.pop_screen", "Pop screen")]
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, refresh_repos: bool, **kwargs: Any) -> None:
+        self.refresh_repos = refresh_repos
         self.engine = Engine()
         super().__init__(**kwargs)
 
@@ -80,6 +90,8 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
     @on(ScreenResume)
     def handle_screen_resume(self) -> None:
         self.populate_initial_table()
+        if self.refresh_repos:
+            self.refresh_starred_repos()
 
     @work(exclusive=True, thread=True)
     def populate_initial_table(self) -> None:
@@ -104,16 +116,22 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
             self.log.info("Updated data table loading state to False")
             self.log.info(f"{data_table=}")
 
-    @work(exclusive=True)
+    @work(exclusive=True, thread=True)
     async def refresh_starred_repos(self) -> None:
-        # TODO: Add way to invoke this method
-        starred_repos = self.engine.retrieve_starred_repos(refresh=True)
-        # TODO: Update this to initially populate the DataTable with values from the db
-        # Then, update the DataTable with the results from the API call
-        await self.populate_data_table(starred_repos)  # type: ignore # TODO: Fix and remove type-ignore comment
+        worker = get_current_worker()
+        if not worker.is_cancelled:
+            starred_repos = self.engine.retrieve_starred_repos(refresh=True)
+            # Then, update the DataTable with the results from the API call
+            self.app.call_from_thread(
+                self.notify, f"Retrieved {len(starred_repos)} starred repos from the API response"
+            )
+            self.populate_data_table(starred_repos)
 
+    @work(exclusive=True)
     async def populate_data_table(self, starred_repos: Sequence[Repository]) -> None:
         table = self.query_one("#starredRepos", DataTable)
+        table.loading = True
+        table.clear()
         table.add_columns("Name", "Description", "Link", "Homepage", "Language", "Stargazers", "Updated At")
         for repo in starred_repos:
             table.add_row(
@@ -125,10 +143,7 @@ class StarredRepos(Screen):  # type: ignore[type-arg]
                 repo.stargazers_count,
                 repo.updated_at,
             )
-
-    def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
-        """Called when the worker state changes."""
-        self.log(event)
+        table.loading = False
 
 
 class GitHubFeed(App[str]):
@@ -147,7 +162,7 @@ class GitHubFeed(App[str]):
         self.theme = "tokyo-night"
         self.install_screen(Home(), name="home")
         self.install_screen(Releases(), name="releases")
-        self.install_screen(StarredRepos(), name="starred_repos")
+        self.install_screen(StarredRepos(False), name="starred_repos")
         self.push_screen("home")
 
     async def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -156,8 +171,15 @@ class GitHubFeed(App[str]):
             self.notify("Loading new releases in background...")
             self.load_starred_releases_screen()
         elif button_id == "checkStarred":
-            self.notify("Check starred button pressed!")
+            self.notify("Refreshing starred repos in background...")
             self.load_starred_repos_screen()
+
+    async def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        self.notify(f"Checkbox {event.checkbox.id} changed to {event.checkbox.value}")
+        check_box = self.query_one("#refreshStarred", Checkbox)
+        # There's definitely a better way to do this
+        self.uninstall_screen("starred_repos")
+        self.install_screen(StarredRepos(check_box.value), name="starred_repos")
 
     @work(exclusive=True)
     async def load_starred_repos_screen(self) -> None:
