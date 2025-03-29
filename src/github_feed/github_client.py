@@ -1,5 +1,3 @@
-from pprint import pprint
-
 import urllib3
 from cachetools import TTLCache, cached
 from urllib3.util import make_headers
@@ -31,7 +29,6 @@ class GitHubClient:
         starred_repos: list[Repository] = []
         url = f"{BASE_URL}/user/starred"
         resp = self.http.request("GET", url)
-        pprint(resp.json())
         if resp.status != 200:
             raise Exception("Failed to retrieve starred repositories")
         # Populate starred_repos list with initial results
@@ -49,8 +46,12 @@ class GitHubClient:
 
         return starred_repos
 
-    @cached(cache=TTLCache(maxsize=500, ttl=600))
+    @cached(cache=TTLCache(maxsize=500, ttl=1200))
     def get_latest_release(self, releases_url: str) -> Release:
         url = releases_url.replace("{/id}", "/latest")
         resp = self.http.request("GET", url)
+        if resp.status == 404:
+            raise Exception("No releases found for this repository.")
+        elif resp.status != 200:
+            raise Exception("Failed to retrieve latest release. Non-200 status returned.")
         return Release.model_validate(resp.json())
