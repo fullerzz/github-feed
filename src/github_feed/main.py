@@ -2,15 +2,14 @@ import logging
 import sys
 from contextlib import asynccontextmanager
 from logging.handlers import RotatingFileHandler
-from os import environ
+from typing import Annotated
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from github_feed.engine import get_db_client
-from github_feed.github_client import GitHubClient
-from github_feed.models import Repository
+from github_feed.engine import Engine, get_db_client
+from github_feed.sql.models import Repository
 
 logging.basicConfig(
     handlers=[
@@ -25,12 +24,11 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):  # type: ignore[no-untyped-def]
-    db_client = get_db_client()
+    db_client = get_db_client()  # trigger db creation
     yield
     del db_client
 
 
-gh_client = GitHubClient(environ["GITHUB_TOKEN"])
 app = FastAPI(title="github-feed", lifespan=lifespan)
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -48,10 +46,10 @@ async def read_root() -> dict[str, str]:
     return {"message": "Welcome to the GitHub Feed API!"}
 
 
-@app.get("/starred")
-async def get_starred_repos() -> list[Repository]:
+@app.get("/starred/db")
+async def get_starred_repos(engine: Annotated[Engine, Depends(Engine)], refresh: bool = True) -> list[Repository]:
     """
-    Retrieve starred repositories from the database.
+    Retrieve starred repositories from the database with the option to refresh the data.
     """
-    repos = gh_client.get_starred_repositories()
+    repos = list(engine.retrieve_starred_repos(refresh=refresh))
     return repos
