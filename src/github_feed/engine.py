@@ -17,7 +17,7 @@ DEFAULT_DB_FILENAME = "stargazing.db"
 
 
 @cache
-def get_db_client(filename: str) -> DbClient:
+def get_db_client(filename: str = DEFAULT_DB_FILENAME) -> DbClient:
     return DbClient(f"sqlite:///{filename}")
 
 
