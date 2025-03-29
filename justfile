@@ -42,3 +42,8 @@ _start-dmypy:
 mypy: _start-dmypy
     @echo "Running mypy with the mypy daemon dmypy"
     uv run dmypy check src/github_feed
+
+# build the docker image
+build:
+    @echo "Building Docker image"
+    docker build -t github-feed .
