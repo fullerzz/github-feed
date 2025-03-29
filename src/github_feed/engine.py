@@ -6,9 +6,9 @@ from os import getenv
 from pydantic import BaseModel, SecretStr, ValidationError
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
-from github_feed import utils
 from github_feed.github_client import GitHubClient
-from github_feed.models import Release, Repository
+from github_feed.lib import utils
+from github_feed.lib.models import Release, Repository
 from github_feed.sql.client import DbClient
 from github_feed.sql.models import Release as SqlRelease
 from github_feed.sql.models import Repository as SqlRepository
