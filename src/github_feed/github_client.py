@@ -4,8 +4,8 @@ import urllib3
 from cachetools import TTLCache, cached
 from urllib3.util import make_headers
 
-from github_feed.models import Release, Repository, User
-from github_feed.utils import parse_link_header
+from github_feed.lib.models import Release, Repository, User
+from github_feed.lib.utils import parse_link_header
 
 BASE_URL = "https://api.github.com"
 BASE_HEADERS = make_headers(keep_alive=True, accept_encoding=True) | {
