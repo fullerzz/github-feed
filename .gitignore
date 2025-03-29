@@ -18,3 +18,6 @@ starred_repos.json
 
 .dmypy.json
 
+*.log
+*.html
+*.svg
