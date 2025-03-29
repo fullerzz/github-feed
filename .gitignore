@@ -21,3 +21,4 @@ starred_repos.json
 *.log
 *.html
 *.svg
+app.log.*
