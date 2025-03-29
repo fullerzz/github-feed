@@ -1,0 +1,8 @@
+app.log
+app.log.*
+.envrc
+tests/
+logs/
+docs/
+.git
+justfile
