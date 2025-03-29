@@ -46,7 +46,7 @@ async def read_root() -> dict[str, str]:
     return {"message": "Welcome to the GitHub Feed API!"}
 
 
-@app.get("/starred/db")
+@app.get("/starred")
 async def get_starred_repos(engine: Annotated[Engine, Depends(Engine)], refresh: bool = True) -> list[Repository]:
     """
     Retrieve starred repositories from the database with the option to refresh the data.
