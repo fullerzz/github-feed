@@ -46,4 +46,9 @@ mypy: _start-dmypy
 # build the docker image
 build:
     @echo "Building Docker image"
-    docker build -t github-feed .
+    docker build -t github-feed-api .
+
+# run the docker image
+run:
+    @echo "Running Docker image"
+    docker compose up
