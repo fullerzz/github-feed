@@ -6,3 +6,7 @@ logs/
 docs/
 .git
 justfile
+.venv
+*.db
+*.sqlite
+data/stargazing.db

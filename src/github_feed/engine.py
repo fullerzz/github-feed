@@ -14,7 +14,7 @@ from github_feed.sql.client import DbClient
 from github_feed.sql.models import Release as SqlRelease
 from github_feed.sql.models import Repository as SqlRepository
 
-DEFAULT_DB_FILENAME = "stargazing.db"
+DEFAULT_DB_FILENAME = "data/stargazing.db"
 logger = logging.getLogger(__name__)
 
 
