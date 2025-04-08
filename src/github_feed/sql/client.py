@@ -1,7 +1,6 @@
 from collections.abc import Sequence
 from datetime import datetime
 
-from sqlalchemy import text
 from sqlmodel import Session, SQLModel, create_engine, select
 
 from github_feed.sql.models import Release, Repository, RunData, User
@@ -9,10 +8,8 @@ from github_feed.sql.models import Release, Repository, RunData, User
 
 class DbClient:
     def __init__(self, db_url: str) -> None:
-        self.engine = create_engine(db_url, echo=True)
+        self.engine = create_engine(db_url, echo=False)
         SQLModel.metadata.create_all(self.engine)
-        with self.engine.connect() as conn:
-            conn.execute(text("PRAGMA journal_mode=WAL;"))
 
     def add_user(self, user: User) -> None:
         with Session(self.engine) as session:
