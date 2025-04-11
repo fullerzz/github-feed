@@ -49,7 +49,9 @@ async def read_root() -> dict[str, str]:
 
 
 @app.get("/starred")
-async def get_starred_repos(engine: Annotated[Engine, Depends(Engine)], refresh: bool = True) -> list[Repository]:
+async def get_starred_repos(
+    engine: Annotated[Engine, Depends(Engine)], refresh: bool = True
+) -> list[Repository]:
     """
     Retrieve starred repositories from the database with the option to refresh the data.
     """
@@ -66,6 +68,6 @@ async def get_releases(
     """
     if refresh:
         logger.info("Refreshing releases")
-        return list(engine.retrieve_fresh_releases())
+        return await engine.retrieve_fresh_releases_async()
     else:
         return engine.retrieve_releases()

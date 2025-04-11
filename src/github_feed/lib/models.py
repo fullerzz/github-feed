@@ -164,8 +164,12 @@ class Repository(BaseModel):
         ...,
         examples=["http://api.github.com/repos/octocat/Hello-World/contents/{+path}"],
     )
-    contributors_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/contributors"])
-    deployments_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/deployments"])
+    contributors_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/contributors"]
+    )
+    deployments_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/deployments"]
+    )
     downloads_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/downloads"])
     events_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/events"])
     forks_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/forks"])
@@ -173,8 +177,12 @@ class Repository(BaseModel):
         ...,
         examples=["http://api.github.com/repos/octocat/Hello-World/git/commits{/sha}"],
     )
-    git_refs_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"])
-    git_tags_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"])
+    git_refs_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/git/refs{/sha}"]
+    )
+    git_tags_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/git/tags{/sha}"]
+    )
     git_url: str = Field(..., examples=["git:github.com/octocat/Hello-World.git"])
     issue_comment_url: str = Field(
         ...,
@@ -204,9 +212,15 @@ class Repository(BaseModel):
     releases_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/releases{/id}"])
     ssh_url: str = Field(..., examples=["git@github.com:octocat/Hello-World.git"])
     stargazers_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/stargazers"])
-    statuses_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"])
-    subscribers_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/subscribers"])
-    subscription_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/subscription"])
+    statuses_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/statuses/{sha}"]
+    )
+    subscribers_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/subscribers"]
+    )
+    subscription_url: str = Field(
+        ..., examples=["http://api.github.com/repos/octocat/Hello-World/subscription"]
+    )
     tags_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/tags"])
     teams_url: str = Field(..., examples=["http://api.github.com/repos/octocat/Hello-World/teams"])
     trees_url: str = Field(
@@ -240,10 +254,14 @@ class Repository(BaseModel):
     has_wiki: bool = Field(..., description="Whether the wiki is enabled.", examples=[True])
     has_pages: bool
     has_downloads: bool = Field(..., description="Whether downloads are enabled.", examples=[True])
-    has_discussions: bool | None = Field(False, description="Whether discussions are enabled.", examples=[True])
+    has_discussions: bool | None = Field(
+        False, description="Whether discussions are enabled.", examples=[True]
+    )
     archived: bool = Field(..., description="Whether the repository is archived.")
     disabled: bool = Field(..., description="Returns whether or not this repository disabled.")
-    visibility: str | None = Field("public", description="The repository visibility: public, private, or internal.")
+    visibility: str | None = Field(
+        "public", description="The repository visibility: public, private, or internal."
+    )
     pushed_at: datetime | None = Field(..., examples=["2011-01-26T19:06:43Z"])
     created_at: datetime | None = Field(..., examples=["2011-01-26T19:01:12Z"])
     updated_at: datetime | None = Field(..., examples=["2011-01-26T19:14:43Z"])

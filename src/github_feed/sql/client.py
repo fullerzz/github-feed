@@ -53,7 +53,9 @@ class DbClient:
     def get_updated_repos(self, start_date: datetime) -> Sequence[Repository]:
         with Session(self.engine) as session:
             statement = (
-                select(Repository).where(Repository.pushed_at != None).where(Repository.pushed_at > start_date)  # type: ignore  # noqa: E711
+                select(Repository)
+                .where(Repository.pushed_at != None)  # noqa: E711
+                .where(Repository.pushed_at > start_date)  # type: ignore
             )
             results = session.exec(statement)
             return results.all()

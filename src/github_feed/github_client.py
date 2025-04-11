@@ -1,5 +1,9 @@
+import logging
+
+import aiohttp
 import urllib3
 from cachetools import TTLCache, cached
+from cashews import cache
 from urllib3.util import make_headers
 
 from github_feed.lib.models import Release, Repository, User
@@ -9,6 +13,8 @@ BASE_URL = "https://api.github.com"
 BASE_HEADERS = make_headers(keep_alive=True, accept_encoding=True) | {
     "X-GitHub-Api-Version": "2022-11-28",
 }
+logger = logging.getLogger(__name__)
+cache.setup("mem://")
 
 
 class GitHubClient:
@@ -55,3 +61,26 @@ class GitHubClient:
         elif resp.status != 200:
             raise Exception("Failed to retrieve latest release. Non-200 status returned.")
         return Release.model_validate(resp.json())
+
+    @cache(ttl="20m", key="{releases_url}")
+    async def _fetch_latest_release(self, releases_url: str, session: aiohttp.ClientSession) -> Release:
+        from asyncio import to_thread
+
+        url = releases_url.replace("{/id}", "/latest")
+        await to_thread(logger.info, "Fetching latest release from %s", url)
+        async with session.get(url) as resp:
+            if resp.status == 404:
+                raise Exception(f"No releases found: {url}")
+            elif resp.status != 200:
+                raise Exception(f"Failed to retrieve latest release. Non-200 status returned: {url}")
+            return Release.model_validate(await resp.json())
+
+    async def get_latest_releases_async(self, urls: list[str]) -> list[Release | BaseException]:
+        from asyncio import gather
+
+        async with aiohttp.ClientSession(
+            headers=BASE_HEADERS | {"Authorization": f"Bearer {self.token}"}
+        ) as session:
+            return await gather(
+                *[self._fetch_latest_release(url, session) for url in urls], return_exceptions=True
+            )

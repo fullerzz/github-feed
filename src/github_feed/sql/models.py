@@ -144,7 +144,9 @@ class Repository(SQLModel, table=True):
     has_downloads: bool
     archived: bool = Field(..., description="Whether the repository is archived.")
     disabled: bool = Field(..., description="Returns whether or not this repository disabled.")
-    visibility: str | None = Field("public", description="The repository visibility: public, private, or internal.")
+    visibility: str | None = Field(
+        "public", description="The repository visibility: public, private, or internal."
+    )
     pushed_at: datetime | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
