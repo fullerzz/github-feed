@@ -124,8 +124,8 @@ class Engine:
             try:
                 latest_release = self.gh_client.get_latest_release(repo.releases_url)
                 if latest_release.created_at > start_time:
-                    self.db.add_release(SqlRelease(**latest_release.model_dump()))
                     releases.append(latest_release)
+                    self.db.add_release(SqlRelease(**latest_release.model_dump()))
             except ValidationError as e:
                 # TODO: Log validation failure for repo
                 logger.warning(
