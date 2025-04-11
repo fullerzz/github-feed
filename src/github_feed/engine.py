@@ -129,7 +129,9 @@ class Engine:
             except ValidationError as e:
                 # TODO: Log validation failure for repo
                 logger.warning(
-                    "Validation error for repo %s: %s", repo.full_name, e.errors(include_input=False, include_url=False)
+                    "Validation error for repo %s: %s",
+                    repo.full_name,
+                    e.errors(include_input=False, include_url=False),
                 )
             except IntegrityError:
                 # We already have this release in the table
@@ -139,4 +141,21 @@ class Engine:
 
         releases.sort(key=lambda x: x.created_at, reverse=True)
         logger.info("Retrieved fresh %d releases", len(releases))
+        return releases
+
+    async def retrieve_fresh_releases_async(self, start_time: datetime | None = None) -> list[Release]:
+        if start_time is None:
+            # Default to 3-day window
+            start_time = datetime.now(UTC) - timedelta(days=3)
+        logger.info("Retrieving repos updated since %s", start_time.isoformat())
+        updated_repos = self.db.get_updated_repos(start_time)
+
+        urls = [repo.releases_url for repo in updated_repos]
+        results: list[Release | BaseException] = await self.gh_client.get_latest_releases_async(urls)
+        releases = []
+        for result in results:
+            if isinstance(result, BaseException):
+                logger.warning("Failed to retrieve release: %s", result)
+            else:
+                releases.append(result)
         return releases
