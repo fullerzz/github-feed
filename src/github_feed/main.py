@@ -70,4 +70,5 @@ async def get_releases(
         logger.info("Refreshing releases")
         return await engine.retrieve_fresh_releases_async()
     else:
-        return engine.retrieve_releases()
+        logger.info("Retrieving releases from the db")
+        return engine.retrieve_releases(start_time=None)
