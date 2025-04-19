@@ -36,6 +36,7 @@ class GitHubClient:
         url = f"{BASE_URL}/user/starred"
         resp = self.http.request("GET", url)
         if resp.status != 200:
+            logger.error("Failed to retrieve starred repositories. Non-200 status returned: %s", resp.status)
             raise Exception("Failed to retrieve starred repositories")
         # Populate starred_repos list with initial results
         starred_repos.extend([Repository.model_validate(repo) for repo in resp.json()])
