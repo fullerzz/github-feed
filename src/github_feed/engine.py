@@ -89,7 +89,7 @@ class Engine:
             logger.info("Updated existing starred repository in the db: %s", repo.full_name)
             return None
 
-    def retrieve_releases(self, start_time: datetime | None = None) -> list[SqlRelease]:
+    def retrieve_releases(self, start_time: datetime | None) -> list[SqlRelease]:
         """
         Retrieve repositories that have been updated since the given start time.
         If no start time is provided, a default of 3 days is used.
