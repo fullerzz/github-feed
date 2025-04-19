@@ -156,6 +156,12 @@ class Engine:
         for result in results:
             if isinstance(result, BaseException):
                 logger.warning("Failed to retrieve release: %s", result)
-            else:
+                continue
+            if result.created_at > start_time:
                 releases.append(result)
+                try:
+                    self.db.add_release(SqlRelease(**result.model_dump()))
+                except IntegrityError:
+                    # We already have this release in the table
+                    logger.info("Release %s already exists in the db", result.name)
         return releases
