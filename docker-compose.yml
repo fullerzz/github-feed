@@ -1,21 +1,21 @@
 services:
   api:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     environment:
       - GITHUB_TOKEN=${GITHUB_TOKEN}  # Required for GitHub API access
       - DB_FILENAME=data/stargazing.db
     volumes:
       - db_data:/app/data            # Mount as a directory instead of a single file
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      test: curl --fail http://localhost:80/ || exit 1
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-
 volumes:
   db_data: {}
