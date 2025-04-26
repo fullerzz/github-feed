@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from typing import NotRequired, TypedDict
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -53,44 +54,44 @@ class User(BaseModel):
     collaborators: int | None = Field(None, examples=[3])
 
 
-class License(BaseModel):
-    key: str = Field(..., examples=["mit"])
-    name: str = Field(..., examples=["MIT License"])
-    url: str | None = Field(..., examples=["https://api.github.com/licenses/mit"])
-    html_url: str | None = None
+class License(TypedDict):
+    key: str
+    name: str
+    url: str | None
+    html_url: NotRequired[str | None]
 
 
-class Permissions(BaseModel):
+class Permissions(TypedDict):
     admin: bool
     pull: bool
-    triage: bool | None = None
+    triage: NotRequired[str | None]
     push: bool
-    maintain: bool | None = None
+    maintain: NotRequired[str | None]
 
 
-class Owner(BaseModel):
-    name: str | None = None
-    email: str | None = None
-    login: str = Field(..., examples=["octocat"])
-    id: int = Field(..., examples=[1])
-    node_id: str = Field(..., examples=["MDQ6VXNlcjE="])
-    avatar_url: str = Field(..., examples=["https://github.com/images/error/octocat_happy.gif"])
-    gravatar_id: str | None = Field(..., examples=["41d064eb2195891e12d0413f63227ea7"])
-    url: str = Field(..., examples=["https://api.github.com/users/octocat"])
-    html_url: str = Field(..., examples=["https://github.com/octocat"])
-    followers_url: str = Field(..., examples=["https://api.github.com/users/octocat/followers"])
-    following_url: str = Field(..., examples=["https://api.github.com/users/octocat/following{/other_user}"])
-    gists_url: str = Field(..., examples=["https://api.github.com/users/octocat/gists{/gist_id}"])
-    starred_url: str = Field(..., examples=["https://api.github.com/users/octocat/starred{/owner}{/repo}"])
-    subscriptions_url: str = Field(..., examples=["https://api.github.com/users/octocat/subscriptions"])
-    organizations_url: str = Field(..., examples=["https://api.github.com/users/octocat/orgs"])
-    repos_url: str = Field(..., examples=["https://api.github.com/users/octocat/repos"])
-    events_url: str = Field(..., examples=["https://api.github.com/users/octocat/events{/privacy}"])
-    received_events_url: str = Field(..., examples=["https://api.github.com/users/octocat/received_events"])
-    type: str = Field(..., examples=["User"])
+class Owner(TypedDict):
+    name: NotRequired[str | None]
+    email: NotRequired[str | None]
+    login: str
+    id: int
+    node_id: str
+    avatar_url: str
+    gravatar_id: NotRequired[str | None]
+    url: str
+    html_url: str
+    followers_url: str
+    following_url: str
+    gists_url: str
+    starred_url: str
+    subscriptions_url: str
+    organizations_url: str
+    repos_url: str
+    events_url: str
+    received_events_url: str
+    type: str
     site_admin: bool
-    starred_at: str | None = Field(None, examples=['"2020-07-09T00:17:55Z"'])
-    user_view_type: str | None = Field(None, examples=["public"])
+    starred_at: NotRequired[str | None]
+    user_view_type: NotRequired[str | None]
 
 
 class SquashMergeCommitTitle(Enum):
