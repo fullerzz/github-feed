@@ -64,9 +64,9 @@ class License(TypedDict):
 class Permissions(TypedDict):
     admin: bool
     pull: bool
-    triage: NotRequired[str | None]
+    triage: NotRequired[bool | None]
     push: bool
-    maintain: NotRequired[str | None]
+    maintain: NotRequired[bool | None]
 
 
 class Owner(TypedDict):
