@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import aiohttp
 import urllib3
@@ -35,21 +36,24 @@ class GitHubClient:
         starred_repos: list[Repository] = []
         url = f"{BASE_URL}/user/starred"
         resp = self.http.request("GET", url)
+        unprocessed_responses: list[Any] = []
         if resp.status != 200:
             logger.error("Failed to retrieve starred repositories. Non-200 status returned: %s", resp.status)
             raise Exception("Failed to retrieve starred repositories")
-        # Populate starred_repos list with initial results
-        starred_repos.extend([Repository.model_validate(repo) for repo in resp.json()])
+        unprocessed_responses.append(resp.json())
 
         # Extract link header to get URL for next page
         link_header = parse_link_header(resp.headers)
         while link_header.next is not None:
             # Retrieve next page of results
             next_resp = self.http.request("GET", link_header.next)
-            # Populate starred_repos list with results
-            starred_repos.extend([Repository.model_validate(repo) for repo in next_resp.json()])
+            unprocessed_responses.append(next_resp.json())
             # Update link_header before next iteration of while-loop
             link_header = parse_link_header(next_resp.headers)
+
+        # Process all unprocessed responses after fetching all pages
+        for response in unprocessed_responses:
+            starred_repos.extend([Repository.model_validate(repo) for repo in response])
 
         return starred_repos
 
