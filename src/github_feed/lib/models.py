@@ -57,8 +57,6 @@ class License(BaseModel):
     key: str = Field(..., examples=["mit"])
     name: str = Field(..., examples=["MIT License"])
     url: str | None = Field(..., examples=["https://api.github.com/licenses/mit"])
-    spdx_id: str | None = Field(..., examples=["MIT"])
-    node_id: str = Field(..., examples=["MDc6TGljZW5zZW1pdA=="])
     html_url: str | None = None
 
 
