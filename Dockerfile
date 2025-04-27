@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1
+# check=error=true
+
 # Install uv
 FROM python:3.12-slim AS builder
 

@@ -52,3 +52,8 @@ build:
 run:
     @echo "Running Docker image"
     docker compose up
+
+# rebuild the docker image
+rebuild:
+    @echo "Rebuilding Docker image"
+    docker compose up --build -d
