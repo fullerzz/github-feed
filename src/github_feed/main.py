@@ -55,7 +55,7 @@ async def get_starred_repos(
     """
     Retrieve starred repositories from the database with the option to refresh the data.
     """
-    repos = list(engine.retrieve_starred_repos(refresh=refresh))
+    repos = list(await engine.retrieve_starred_repos(refresh=refresh))
     return repos
 
 
