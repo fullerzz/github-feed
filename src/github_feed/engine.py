@@ -48,22 +48,22 @@ class Engine:
             config_inputs["db_filename"] = db_filename
         return Config(**config_inputs)  # type: ignore[arg-type]
 
-    def retrieve_starred_repos(self, refresh: bool = False) -> Sequence[SqlRepository]:
+    async def retrieve_starred_repos(self, refresh: bool = False) -> Sequence[SqlRepository]:
         """
         Returns list of starred repositories from the db.
         """
         if refresh:
             logger.info("Refreshing starred repositories")
-            self.refresh_starred_repos()
+            await self.refresh_starred_repos()
         starred_repos = self.db.get_starred_repos()
         logger.info("Retrieved %d starred repositories from the db", len(starred_repos))
         return starred_repos
 
-    def refresh_starred_repos(self) -> None:
+    async def refresh_starred_repos(self) -> None:
         """
         Retrieve starred repos from GitHub and populate the database.
         """
-        starred_repos = self.gh_client.get_starred_repositories()
+        starred_repos = await self.gh_client.get_starred_repositories_async()
         for repo in starred_repos:
             self._refresh_starred_repo_in_table(repo)
 
