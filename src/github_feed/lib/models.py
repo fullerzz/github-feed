@@ -1,8 +1,10 @@
 from datetime import datetime
 from enum import Enum
+from functools import cached_property
 from typing import NotRequired, TypedDict
+from zoneinfo import ZoneInfo
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, computed_field
 
 
 class LinkHeader(BaseModel):
@@ -344,3 +346,19 @@ class Release(BaseModel):
     prelease: bool = False
     created_at: datetime
     published_at: datetime
+
+    @computed_field  # type: ignore[prop-decorator]
+    @cached_property
+    def created_at_local_tz(self) -> datetime:
+        """
+        Convert the created_at field to a local timezone-aware datetime object.
+        """
+        return self.created_at.astimezone(ZoneInfo("America/Phoenix"))
+
+    @computed_field  # type: ignore[prop-decorator]
+    @cached_property
+    def published_at_local_tz(self) -> datetime:
+        """
+        Convert the published_at field to a local timezone-aware datetime object.
+        """
+        return self.published_at.astimezone(ZoneInfo("America/Phoenix"))

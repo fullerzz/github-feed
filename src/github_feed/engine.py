@@ -2,7 +2,7 @@ import logging
 from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
 from functools import cache
-from os import getenv
+from os import environ, getenv
 
 from pydantic import BaseModel, SecretStr, ValidationError
 from sqlalchemy.exc import IntegrityError, NoResultFound
@@ -35,18 +35,20 @@ class Config(BaseModel):
 
 class Engine:
     def __init__(self) -> None:
-        self.config = self.load_config()
-        self.db = get_db_client(filename=self.config.db_filename)
-        self.gh_client = get_github_client(self.config.github_token.get_secret_value())
+        self.config: Config = self.load_config()
+        self.db: DbClient = get_db_client(filename=self.config.db_filename)
+        self.gh_client: GitHubClient = get_github_client(self.config.github_token.get_secret_value())
         logger.info("Created new engine instance")
 
     def load_config(self) -> Config:
         db_filename = getenv("DB_FILENAME")
-        github_token = getenv("GITHUB_TOKEN")
+        github_token = environ["GITHUB_TOKEN"]
         config_inputs = {"github_token": github_token}
+
         if db_filename is not None:
             config_inputs["db_filename"] = db_filename
-        return Config(**config_inputs)  # type: ignore[arg-type]
+
+        return Config(**config_inputs)  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]
 
     async def retrieve_starred_repos(self, refresh: bool = False) -> Sequence[SqlRepository]:
         """

@@ -87,14 +87,22 @@ markers = [
 include = ["src", "tests"]
 exclude = ["**/node_modules",
     "**/__pycache__",
-    "typings",
-    "**/.venv",
-    ".venv"
 ]
-typeCheckingMode = "standard"
+typeCheckingMode = "strict"
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportUnknownVariableType = false
+reportUnknownParameterType = false
+reportUnknownLambdaType = false
 reportMissingImports = "error"
 reportMissingTypeStubs = true
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 strict = true
 exclude = "typings"
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
