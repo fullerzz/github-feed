@@ -1,7 +1,9 @@
 from datetime import datetime
 from enum import Enum
+from functools import cached_property
+from zoneinfo import ZoneInfo
 
-from pydantic import EmailStr
+from pydantic import EmailStr, computed_field
 from sqlmodel import Field, SQLModel
 
 
@@ -25,6 +27,22 @@ class Release(SQLModel, table=True):
     prelease: bool = False
     created_at: datetime
     published_at: datetime
+
+    @computed_field  # type: ignore[prop-decorator]
+    @cached_property
+    def created_at_local_tz(self) -> datetime:
+        """
+        Convert the created_at field to a local timezone-aware datetime object.
+        """
+        return self.created_at.astimezone(ZoneInfo("America/Phoenix"))
+
+    @computed_field  # type: ignore[prop-decorator]
+    @cached_property
+    def published_at_local_tz(self) -> datetime:
+        """
+        Convert the published_at field to a local timezone-aware datetime object.
+        """
+        return self.published_at.astimezone(ZoneInfo("America/Phoenix"))
 
 
 class User(SQLModel, table=True):
