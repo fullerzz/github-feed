@@ -49,7 +49,7 @@ class GitHubClient:
         while link_header.next is not None:
             # Retrieve next page of results
             next_resp = self.http.request("GET", link_header.next)
-            logger.info("PAGINATION! %s - %s", link_header.next, resp.status)
+            logger.info("PAGINATION! %s - %s", link_header.next, next_resp.status)
             unprocessed_responses.append(next_resp.json())
             # Update link_header before next iteration of while-loop
             link_header = parse_link_header(next_resp.headers)
