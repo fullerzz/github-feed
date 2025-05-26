@@ -166,4 +166,5 @@ class Engine:
                 except IntegrityError:
                     # We already have this release in the table
                     logger.info("Release %s already exists in the db", result.name)
+        releases.sort(key=lambda x: x.created_at, reverse=True)
         return releases
