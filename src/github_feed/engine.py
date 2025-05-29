@@ -171,7 +171,7 @@ class Engine:
                     try:
                         self.db.add_release(SqlRelease(**result.model_dump()))
                     except IntegrityError:
-                        logger.info("Release %s already exists in the db", result.name)
+                        logger.debug("Release %s already exists in the db", result.name)
         releases.sort(key=lambda x: x.created_at, reverse=True)
         logger.info("Retrieved fresh %d releases", len(releases))
         return releases
