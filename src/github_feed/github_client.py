@@ -1,6 +1,6 @@
 import logging
 from asyncio import gather, to_thread
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 import aiohttp
@@ -68,7 +68,7 @@ class GitHubClient:
     ) -> list[dict[str, Any]]:
         await to_thread(logger.info, "Fetching starred repos from %s", url)
         async with session.get(url) as resp:
-            self._log_rate_limit(resp.headers)
+            self._log_rate_limit(resp.headers, sampled=True)
             if resp.status == 404:
                 raise Exception(f"No releases found: {url}")
             elif resp.status != 200:
@@ -125,7 +125,7 @@ class GitHubClient:
             api_url = url.split("{")[0] if "{" in url else url
             await to_thread(logger.info, "Fetching latest release from %s", api_url)
             async with session.get(api_url) as response:
-                self._log_rate_limit(response.headers)
+                self._log_rate_limit(response.headers, sampled=True)
                 response.raise_for_status()
                 data = await response.json()
                 return [Release.model_validate(item) for item in data]
@@ -140,18 +140,20 @@ class GitHubClient:
             results = await gather(*tasks, return_exceptions=True)
             return results
 
-    def _log_rate_limit(self, resp_headers: "CIMultiDictProxy[str]") -> None:
+    def _log_rate_limit(self, resp_headers: "CIMultiDictProxy[str]", sampled: bool) -> None:
         if "x-ratelimit-limit" in resp_headers:
             limit = resp_headers["x-ratelimit-limit"]
             remaining = resp_headers.get("x-ratelimit-remaining", "unknown")
             used = resp_headers.get("x-ratelimit-used", "unknown")
             reset = resp_headers.get("x-ratelimit-reset", "unknown")
             if reset != "unknown":
-                reset = datetime.fromtimestamp(int(reset)).strftime("%Y-%m-%d %H:%M:%S")
-            logger.info(
-                "Rate limit: %s, Remaining: %s, Used: %s, Reset: %s",
-                limit,
-                remaining,
-                used,
-                reset,
-            )
+                reset = datetime.fromtimestamp(int(reset), UTC).strftime("%Y-%m-%d %H:%M:%S%Z")
+
+            if not sampled or (sampled and used != "unknown" and int(used) % 10 == 0):
+                logger.info(
+                    "Rate limit: %s, Remaining: %s, Used: %s, Reset: %s",
+                    limit,
+                    remaining,
+                    used,
+                    reset,
+                )
