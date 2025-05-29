@@ -152,19 +152,26 @@ class Engine:
         logger.info("Retrieving repos updated since %s", start_time.isoformat())
         updated_repos = self.db.get_updated_repos(start_time)
 
+        # Fetch all releases for each updated repo asynchronously
         urls = [repo.releases_url for repo in updated_repos]
-        results: list[Release | BaseException] = await self.gh_client.get_latest_releases_async(urls)
+        all_results: list[list[Release] | BaseException] = await self.gh_client.get_latest_releases_async(
+            urls
+        )
         releases = []
-        for result in results:
-            if isinstance(result, BaseException):
-                logger.warning("Failed to retrieve release: %s", result)
+        for repo, results in zip(updated_repos, all_results, strict=True):
+            if isinstance(results, BaseException):
+                logger.warning("Failed to retrieve releases for repo %s: %s", repo.full_name, results)
                 continue
-            if result.created_at > start_time:
-                releases.append(result)
-                try:
-                    self.db.add_release(SqlRelease(**result.model_dump()))
-                except IntegrityError:
-                    # We already have this release in the table
-                    logger.info("Release %s already exists in the db", result.name)
+            for result in results:
+                if isinstance(result, BaseException):
+                    logger.warning("Failed to retrieve release for repo %s: %s", repo.full_name, result)
+                    continue
+                if result.created_at > start_time:
+                    releases.append(result)
+                    try:
+                        self.db.add_release(SqlRelease(**result.model_dump()))
+                    except IntegrityError:
+                        logger.info("Release %s already exists in the db", result.name)
         releases.sort(key=lambda x: x.created_at, reverse=True)
+        logger.info("Retrieved fresh %d releases", len(releases))
         return releases

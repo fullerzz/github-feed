@@ -1,11 +1,13 @@
 import logging
 from asyncio import gather, to_thread
+from datetime import datetime
 from typing import Any
 
 import aiohttp
 import urllib3
 from cachetools import TTLCache, cached
 from cashews import cache
+from multidict import CIMultiDictProxy
 from urllib3.util import make_headers
 
 from github_feed.lib.models import Release, Repository, User
@@ -66,6 +68,7 @@ class GitHubClient:
     ) -> list[dict[str, Any]]:
         await to_thread(logger.info, "Fetching starred repos from %s", url)
         async with session.get(url) as resp:
+            self._log_rate_limit(resp.headers)
             if resp.status == 404:
                 raise Exception(f"No releases found: {url}")
             elif resp.status != 200:
@@ -114,25 +117,41 @@ class GitHubClient:
             raise Exception("Failed to retrieve latest release. Non-200 status returned.")
         return Release.model_validate(resp.json())
 
-    @cache(ttl="20m", key="{releases_url}")
-    async def _fetch_latest_release(self, releases_url: str, session: aiohttp.ClientSession) -> Release:
-        from asyncio import to_thread
+    @cache(ttl="20m", key="{url}")
+    async def _fetch_releases_for_repo(
+        self, url: str, session: aiohttp.ClientSession
+    ) -> list[Release] | BaseException:
+        try:
+            api_url = url.split("{")[0] if "{" in url else url
+            await to_thread(logger.info, "Fetching latest release from %s", api_url)
+            async with session.get(api_url) as response:
+                self._log_rate_limit(response.headers)
+                response.raise_for_status()
+                data = await response.json()
+                return [Release.model_validate(item) for item in data]
+        except Exception as e:
+            return e
 
-        url = releases_url.replace("{/id}", "/latest")
-        await to_thread(logger.info, "Fetching latest release from %s", url)
-        async with session.get(url) as resp:
-            if resp.status == 404:
-                raise Exception(f"No releases found: {url}")
-            elif resp.status != 200:
-                raise Exception(f"Failed to retrieve latest release. Non-200 status returned: {url}")
-            return Release.model_validate(await resp.json())
-
-    async def get_latest_releases_async(self, urls: list[str]) -> list[Release | BaseException]:
-        from asyncio import gather
-
+    async def get_latest_releases_async(self, urls: list[str]) -> list[list[Release] | BaseException]:
         async with aiohttp.ClientSession(
             headers=BASE_HEADERS | {"Authorization": f"Bearer {self.token}"}
         ) as session:
-            return await gather(
-                *[self._fetch_latest_release(url, session) for url in urls], return_exceptions=True
+            tasks = [self._fetch_releases_for_repo(url, session) for url in urls]
+            results = await gather(*tasks, return_exceptions=True)
+            return results
+
+    def _log_rate_limit(self, resp_headers: "CIMultiDictProxy[str]") -> None:
+        if "x-ratelimit-limit" in resp_headers:
+            limit = resp_headers["x-ratelimit-limit"]
+            remaining = resp_headers.get("x-ratelimit-remaining", "unknown")
+            used = resp_headers.get("x-ratelimit-used", "unknown")
+            reset = resp_headers.get("x-ratelimit-reset", "unknown")
+            if reset != "unknown":
+                reset = datetime.fromtimestamp(int(reset)).strftime("%Y-%m-%d %H:%M:%S")
+            logger.info(
+                "Rate limit: %s, Remaining: %s, Used: %s, Reset: %s",
+                limit,
+                remaining,
+                used,
+                reset,
             )
