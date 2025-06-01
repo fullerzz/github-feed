@@ -44,6 +44,14 @@ class Release(SQLModel, table=True):
         """
         return self.published_at.astimezone(ZoneInfo("America/Phoenix"))
 
+    @computed_field  # type: ignore[prop-decorator]
+    @cached_property
+    def body_short(self) -> str:
+        """
+        Return the first 1000 characters of the body, or the full body if it's shorter.
+        """
+        return self.body[:1000] + "..." if len(self.body) > 1000 else self.body
+
 
 class User(SQLModel, table=True):
     login: str
