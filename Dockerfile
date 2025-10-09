@@ -2,7 +2,7 @@
 # check=error=true
 
 # Install uv
-FROM python:3.13-slim AS builder
+FROM python:3.14-slim AS builder
 
 # Install curl for health checks
 RUN apt-get update && apt-get install -y curl
