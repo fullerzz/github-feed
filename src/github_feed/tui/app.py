@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding, BindingType
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.reactive import reactive
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Header, Label, ListItem, ListView, Markdown, Static
@@ -204,7 +204,8 @@ class ReleasesScreen(Screen[None]):
             yield Label("", id="release-status")
             with Horizontal(id="release-content"):
                 yield ListView(id="release-list")
-                yield Markdown("Select a release to view notes.", id="release-notes")
+                with VerticalScroll(id="release-notes-scroll"):
+                    yield Markdown("Select a release to view notes.", id="release-notes")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -324,12 +325,15 @@ class ReleasesScreen(Screen[None]):
 
     def _show_release_notes(self, index: int | None) -> None:
         markdown = self.query_one("#release-notes", Markdown)
+        scroll = self.query_one("#release-notes-scroll", VerticalScroll)
         if index is None or index < 0 or index >= len(self._releases):
             markdown.update("Select a release to view notes.")
+            scroll.scroll_home(animate=False)
             return
 
         release = self._releases[index]
         markdown.update(_format_release_markdown(release))
+        scroll.scroll_home(animate=False)
 
 
 class ReleaseNotesScreen(Screen[None]):
@@ -346,8 +350,12 @@ class ReleaseNotesScreen(Screen[None]):
         with Vertical(id="release-notes-page-layout"):
             with Horizontal(classes="toolbar"):
                 yield Button("Back", id="release-notes-back")
-            yield Markdown(_format_release_markdown(self._release), id="release-notes-page")
+            with VerticalScroll(id="release-notes-scroll"):
+                yield Markdown(_format_release_markdown(self._release), id="release-notes-page")
         yield Footer()
+
+    def on_mount(self) -> None:
+        self.query_one("#release-notes-scroll", VerticalScroll).focus()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "release-notes-back":

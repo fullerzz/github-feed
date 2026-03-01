@@ -67,19 +67,24 @@ Footer {
     margin-right: 1;
 }
 
-#release-notes {
+#release-notes-scroll {
     width: 1fr;
     border: round $boost;
     padding: 1 2;
-    overflow-y: auto;
+}
+
+#release-notes {
+    width: 1fr;
+}
+
+#release-notes-scroll {
+    height: 1fr;
+    border: round $boost;
+    padding: 1 2;
 }
 
 #release-notes-page {
     width: 1fr;
-    height: 1fr;
-    border: round $boost;
-    padding: 1 2;
-    overflow-y: auto;
 }
 
 .release-item {
