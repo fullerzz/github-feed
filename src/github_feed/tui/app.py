@@ -188,6 +188,8 @@ class StarredReposScreen(Screen[None]):
 class ReleasesScreen(Screen[None]):
     _releases: list[ReleaseLike]
     _selected_release_index: int | None
+    _release_cache: dict[tuple[ReleaseMode, int], list[ReleaseLike]]
+    _loaded_cache_key: tuple[ReleaseMode, int] | None
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("right", "open_selected_release_notes", "Full Notes"),
     ]
@@ -208,9 +210,17 @@ class ReleasesScreen(Screen[None]):
     def on_mount(self) -> None:
         self._releases = []
         self._selected_release_index = None
+        self._release_cache = {}
+        self._loaded_cache_key = None
         self.load_releases(refresh=False)
 
     def on_screen_resume(self) -> None:
+        if self.loading:
+            return
+        app = _feed_app(self)
+        current_cache_key = self._current_cache_key(app)
+        if self._loaded_cache_key == current_cache_key and current_cache_key in self._release_cache:
+            return
         self.load_releases(refresh=False)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -252,7 +262,15 @@ class ReleasesScreen(Screen[None]):
         content.loading = True
         mode_text = app.release_mode_label
         status.update(f"Loading releases ({mode_text})...")
+        cache_key = self._current_cache_key(app)
         try:
+            if not refresh and cache_key in self._release_cache:
+                self._releases = list(self._release_cache[cache_key])
+                self._loaded_cache_key = cache_key
+                await self._render_release_list()
+                status.update(f"Loaded {len(self._releases)} releases ({mode_text}, cached).")
+                return
+
             if refresh:
                 releases = await app.engine.retrieve_fresh_releases_for_mode(
                     window_days=app.release_window_days,
@@ -266,13 +284,21 @@ class ReleasesScreen(Screen[None]):
                     app.release_mode == ReleaseMode.ALL_HISTORY,
                 )
 
-            self._releases = list(releases)
+            refreshed_releases = list(releases)
+            if refresh:
+                self._release_cache.clear()
+            self._release_cache[cache_key] = refreshed_releases
+            self._releases = list(refreshed_releases)
+            self._loaded_cache_key = cache_key
             await self._render_release_list()
             status.update(f"Loaded {len(self._releases)} releases ({mode_text}).")
         except Exception as error:
             status.update(f"Failed to load releases: {error}")
         finally:
             content.loading = False
+
+    def _current_cache_key(self, app: GitHubFeedApp) -> tuple[ReleaseMode, int]:
+        return app.release_mode, app.release_window_days
 
     async def _render_release_list(self) -> None:
         list_view = self.query_one("#release-list", ListView)

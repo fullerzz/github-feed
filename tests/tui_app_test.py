@@ -33,6 +33,8 @@ class _ReleaseStub:
 class _EngineStub:
     def __init__(self, releases: Sequence[_ReleaseStub]) -> None:
         self._releases = list(releases)
+        self.retrieve_releases_calls = 0
+        self.retrieve_fresh_releases_calls = 0
 
     async def retrieve_starred_repos(self, refresh: bool = False) -> Sequence[_RepositoryStub]:
         del refresh
@@ -42,12 +44,14 @@ class _EngineStub:
         self, window_days: int, all_history: bool = False
     ) -> Sequence[_ReleaseStub]:
         del window_days, all_history
+        self.retrieve_releases_calls += 1
         return self._releases
 
     async def retrieve_fresh_releases_for_mode(
         self, window_days: int, all_history: bool = False
     ) -> Sequence[_ReleaseStub]:
         del window_days, all_history
+        self.retrieve_fresh_releases_calls += 1
         return self._releases
 
 
@@ -115,12 +119,14 @@ async def test_releases_right_arrow_opens_full_release_notes_screen() -> None:
 
 @pytest.mark.asyncio
 async def test_release_notes_left_arrow_returns_to_releases_screen() -> None:
-    app = GitHubFeedApp(engine=_EngineStub(_new_releases()))
+    engine = _EngineStub(_new_releases())
+    app = GitHubFeedApp(engine=engine)
 
     async with app.run_test() as pilot:
         await pilot.press("r")
         await _wait_for(lambda: isinstance(app.screen, ReleasesScreen), pilot)
         await _wait_for(lambda: _release_list_populated(app), pilot)
+        initial_retrieve_calls = engine.retrieve_releases_calls
 
         releases_screen = app.screen
         assert isinstance(releases_screen, ReleasesScreen)
@@ -134,6 +140,7 @@ async def test_release_notes_left_arrow_returns_to_releases_screen() -> None:
 
         await pilot.press("left")
         await _wait_for(lambda: isinstance(app.screen, ReleasesScreen), pilot)
+        await pilot.pause()
 
         releases_screen = app.screen
         assert isinstance(releases_screen, ReleasesScreen)
@@ -144,3 +151,31 @@ async def test_release_notes_left_arrow_returns_to_releases_screen() -> None:
 
         items = release_list.query("ListItem").results(ListItem)
         assert [item.highlighted for item in items] == [False, True]
+        assert engine.retrieve_releases_calls == initial_retrieve_calls
+
+
+@pytest.mark.asyncio
+async def test_manual_refresh_invalidates_other_mode_release_cache() -> None:
+    engine = _EngineStub(_new_releases())
+    app = GitHubFeedApp(engine=engine)
+
+    async with app.run_test() as pilot:
+        await pilot.press("r")
+        await _wait_for(lambda: isinstance(app.screen, ReleasesScreen), pilot)
+        await _wait_for(lambda: _release_list_populated(app), pilot)
+        initial_retrieve_calls = engine.retrieve_releases_calls
+
+        await pilot.press("m")
+        await _wait_for(lambda: engine.retrieve_releases_calls == initial_retrieve_calls + 1, pilot)
+
+        await pilot.press("m")
+        await pilot.pause()
+        assert engine.retrieve_releases_calls == initial_retrieve_calls + 1
+
+        releases_screen = app.screen
+        assert isinstance(releases_screen, ReleasesScreen)
+        releases_screen.load_releases(refresh=True)
+        await _wait_for(lambda: engine.retrieve_fresh_releases_calls == 1, pilot)
+
+        await pilot.press("m")
+        await _wait_for(lambda: engine.retrieve_releases_calls == initial_retrieve_calls + 2, pilot)
