@@ -402,7 +402,7 @@ class GitHubFeedApp(App[None]):
     def engine(self) -> EngineLike:
         if self._engine is None:
             raise RuntimeError("Engine not initialized")
-        return cast(EngineLike, self._engine)
+        return self._engine
 
     @property
     def has_engine(self) -> bool:
@@ -417,7 +417,7 @@ class GitHubFeedApp(App[None]):
     def on_mount(self) -> None:
         if self._engine is None:
             try:
-                self._engine = Engine()
+                self._engine = cast(EngineLike, Engine())
             except KeyError:
                 self.startup_error = "Missing GITHUB_TOKEN. Set it before running the TUI."
 
