@@ -57,6 +57,8 @@ Keyboard shortcuts:
 - `s`: Starred repositories
 - `r`: Releases
 - `m`: Toggle release mode
+- `right`: On Releases, open full-page notes for selected release
+- `left`: On full-page notes, return to Releases
 - `q`: Quit
 
 ## Development Checks

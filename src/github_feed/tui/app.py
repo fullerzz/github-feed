@@ -69,6 +69,19 @@ def _repo_name_from_release_url(url: str) -> str:
     return "unknown/unknown"
 
 
+def _format_release_markdown(release: ReleaseLike) -> str:
+    repository = _repo_name_from_release_url(release.html_url)
+    notes = release.body.strip() or "_No release notes provided._"
+    return "\n".join(
+        [
+            f"# {repository} - {release.tag_name}",
+            f"Created: {_format_timestamp(release.created_at)}",
+            "",
+            notes,
+        ]
+    )
+
+
 class HomeScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
@@ -174,6 +187,10 @@ class StarredReposScreen(Screen[None]):
 
 class ReleasesScreen(Screen[None]):
     _releases: list[ReleaseLike]
+    _selected_release_index: int | None
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("right", "open_selected_release_notes", "Full Notes"),
+    ]
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -190,6 +207,7 @@ class ReleasesScreen(Screen[None]):
 
     def on_mount(self) -> None:
         self._releases = []
+        self._selected_release_index = None
         self.load_releases(refresh=False)
 
     def on_screen_resume(self) -> None:
@@ -208,7 +226,19 @@ class ReleasesScreen(Screen[None]):
     def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
         if event.list_view.id != "release-list":
             return
-        self._show_release_notes(event.list_view.index)
+        index = event.list_view.index
+        if index is not None and 0 <= index < len(self._releases):
+            self._selected_release_index = index
+        self._show_release_notes(index)
+
+    def action_open_selected_release_notes(self) -> None:
+        list_view = self.query_one("#release-list", ListView)
+        index = list_view.index
+        if index is None or index < 0 or index >= len(self._releases):
+            return
+
+        self._selected_release_index = index
+        self.app.push_screen(ReleaseNotesScreen(self._releases[index]))
 
     @work(exclusive=True)
     async def load_releases(self, refresh: bool) -> None:
@@ -237,27 +267,33 @@ class ReleasesScreen(Screen[None]):
                 )
 
             self._releases = list(releases)
-            self._render_release_list()
+            await self._render_release_list()
             status.update(f"Loaded {len(self._releases)} releases ({mode_text}).")
         except Exception as error:
             status.update(f"Failed to load releases: {error}")
         finally:
             content.loading = False
 
-    def _render_release_list(self) -> None:
+    async def _render_release_list(self) -> None:
         list_view = self.query_one("#release-list", ListView)
-        list_view.clear()
+        await list_view.clear()
 
         for release in self._releases:
             repository = _repo_name_from_release_url(release.html_url)
             title = f"{repository} | {release.tag_name} | {_format_timestamp(release.created_at)}"
-            list_view.append(ListItem(Label(title, classes="release-item")))
+            await list_view.append(ListItem(Label(title, classes="release-item")))
 
         if self._releases:
-            list_view.index = 0
-            self._show_release_notes(0)
+            selected_index = self._selected_release_index
+            if selected_index is None:
+                selected_index = 0
+            selected_index = max(0, min(selected_index, len(self._releases) - 1))
+            self._selected_release_index = selected_index
+            list_view.index = selected_index
+            self._show_release_notes(selected_index)
             list_view.focus()
         else:
+            self._selected_release_index = None
             self.query_one("#release-notes", Markdown).update("No releases found for the current mode.")
 
     def _show_release_notes(self, index: int | None) -> None:
@@ -267,18 +303,32 @@ class ReleasesScreen(Screen[None]):
             return
 
         release = self._releases[index]
-        repository = _repo_name_from_release_url(release.html_url)
-        notes = release.body.strip() or "_No release notes provided._"
-        markdown.update(
-            "\n".join(
-                [
-                    f"# {repository} - {release.tag_name}",
-                    f"Created: {_format_timestamp(release.created_at)}",
-                    "",
-                    notes,
-                ]
-            )
-        )
+        markdown.update(_format_release_markdown(release))
+
+
+class ReleaseNotesScreen(Screen[None]):
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("left", "go_back", "Back"),
+    ]
+
+    def __init__(self, release: ReleaseLike) -> None:
+        super().__init__()
+        self._release = release
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Vertical(id="release-notes-page-layout"):
+            with Horizontal(classes="toolbar"):
+                yield Button("Back", id="release-notes-back")
+            yield Markdown(_format_release_markdown(self._release), id="release-notes-page")
+        yield Footer()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "release-notes-back":
+            self.action_go_back()
+
+    def action_go_back(self) -> None:
+        self.app.pop_screen()
 
 
 class GitHubFeedApp(App[None]):
