@@ -19,6 +19,10 @@ run-prod:
 uvicorn:
     uv run uvicorn github_feed.main:app --host 0.0.0.0 --port 80
 
+# run textual tui
+run-tui:
+    uv run github-feed-tui
+
 # run the ruff linter
 lint:
     @echo "Running Ruff linter"

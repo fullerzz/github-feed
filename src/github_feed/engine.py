@@ -15,6 +15,7 @@ from github_feed.sql.models import Release as SqlRelease
 from github_feed.sql.models import Repository as SqlRepository
 
 DEFAULT_DB_FILENAME = "data/stargazing.db"
+DEFAULT_RELEASE_WINDOW_DAYS = 30
 logger = logging.getLogger(__name__)
 
 
@@ -107,6 +108,18 @@ class Engine:
         logger.info("Retrieved %d releases from the db", len(releases))
         return releases
 
+    def retrieve_releases_for_mode(
+        self, window_days: int = DEFAULT_RELEASE_WINDOW_DAYS, all_history: bool = False
+    ) -> list[SqlRelease]:
+        if all_history:
+            releases = list(self.db.get_all_releases())
+            releases.sort(key=lambda x: x.created_at, reverse=True)
+            logger.info("Retrieved %d releases from the db (all history mode)", len(releases))
+            return releases
+
+        start_time = datetime.now(UTC) - timedelta(days=window_days)
+        return self.retrieve_releases(start_time=start_time)
+
     def retrieve_fresh_releases(self, start_time: datetime | None = None) -> list[Release]:
         """
         Retrieve repositories that have been updated since the given start time.
@@ -151,14 +164,31 @@ class Engine:
             start_time = datetime.now(UTC) - timedelta(days=3)
         logger.info("Retrieving repos updated since %s", start_time.isoformat())
         updated_repos = self.db.get_updated_repos(start_time)
+        return await self._retrieve_fresh_releases_for_repos(updated_repos, start_time)
 
-        # Fetch all releases for each updated repo asynchronously
-        urls = [repo.releases_url for repo in updated_repos]
+    async def retrieve_fresh_releases_for_mode(
+        self, window_days: int = DEFAULT_RELEASE_WINDOW_DAYS, all_history: bool = False
+    ) -> list[Release]:
+        start_time: datetime | None = None
+        if all_history:
+            logger.info("Retrieving fresh releases for all starred repositories")
+            repos = self.db.get_starred_repos()
+        else:
+            start_time = datetime.now(UTC) - timedelta(days=window_days)
+            logger.info("Retrieving repos updated since %s", start_time.isoformat())
+            repos = self.db.get_updated_repos(start_time)
+
+        return await self._retrieve_fresh_releases_for_repos(repos, start_time)
+
+    async def _retrieve_fresh_releases_for_repos(
+        self, repos: Sequence[SqlRepository], start_time: datetime | None
+    ) -> list[Release]:
+        urls = [repo.releases_url for repo in repos]
         all_results: list[list[Release] | BaseException] = await self.gh_client.get_latest_releases_async(
             urls
         )
         releases = []
-        for repo, results in zip(updated_repos, all_results, strict=True):
+        for repo, results in zip(repos, all_results, strict=True):
             if isinstance(results, BaseException):
                 logger.warning("Failed to retrieve releases for repo %s: %s", repo.full_name, results)
                 continue
@@ -166,7 +196,7 @@ class Engine:
                 if isinstance(result, BaseException):
                     logger.warning("Failed to retrieve release for repo %s: %s", repo.full_name, result)
                     continue
-                if result.created_at > start_time:
+                if start_time is None or result.created_at > start_time:
                     releases.append(result)
                     try:
                         self.db.add_release(SqlRelease(**result.model_dump()))

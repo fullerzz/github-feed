@@ -38,6 +38,12 @@ class DbClient:
             results = session.exec(statement)
             return results.all()
 
+    def get_all_releases(self) -> Sequence[Release]:
+        with Session(self.engine) as session:
+            statement = select(Release)
+            results = session.exec(statement)
+            return results.all()
+
     def get_repository(self, repo_id: int) -> Repository:
         with Session(self.engine) as session:
             statement = select(Repository).where(Repository.id == repo_id)

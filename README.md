@@ -1,31 +1,68 @@
 # GitHub Feed
 
-The [GitHub activity feed is broken](https://github.com/orgs/community/discussions/122324), so I decided to reimplement it in the terminal.
+`github-feed` tracks release activity from your starred repositories.
 
-## Goals
+It now supports two interfaces:
+- A FastAPI REST API for programmatic access.
+- A Textual TUI for interactive browsing in the terminal.
 
-- [x] Store list of user's starred repos locally in sqlite database
-- [x] Retrieve list of releases using GitHub REST API and display on console
-- [ ] Allow user to specify how far in the past to query for when finding releases
-- [ ] Cache release data locally to avoid needless GitHub API usage
-- [x] Transform from basic CLI that uses [`rich`](https://github.com/Textualize/rich) to a TUI using [`textual`](https://github.com/Textualize/textual)
+## Requirements
 
-## Example Output
+- Python 3.12+
+- `uv`
+- `GITHUB_TOKEN` environment variable
 
-### Home Screen
+Optional environment variables:
+- `DB_FILENAME` (default: `data/stargazing.db`)
+- `RELEASE_WINDOW_DAYS` (default: `30`, used by TUI recent mode)
 
-![Home Screen](docs/imgs/home_screen.png)
+## Setup
 
-### Starred Repos Screen
+```bash
+uv sync
+```
 
-![Starred Repos Screen](docs/imgs/starred_repos.png)
+## Run the API
 
-### Releases Screen
+```bash
+just run-dev
+```
 
-#### Collapsed
+Useful endpoints:
+- `GET /starred?refresh=true|false`
+- `GET /releases?refresh=true|false`
 
-![Releases Screen - Collapsed](docs/imgs/releases_list_collapsed.png)
+## Run the TUI
 
-#### Expanded
+```bash
+just run-tui
+```
 
-![Releases Screen - Expanded](docs/imgs/releases_list_release_expanded.png)
+Or run directly:
+
+```bash
+uv run github-feed-tui
+```
+
+TUI options:
+- `--window-days <N>`: set recent-mode window (default: 30)
+- `--all-history`: start in all-history mode
+
+Release modes in the TUI:
+- `Recent`: show releases in a configurable lookback window (default 30 days)
+- `All History`: show all stored release history
+
+Keyboard shortcuts:
+- `h`: Home
+- `s`: Starred repositories
+- `r`: Releases
+- `m`: Toggle release mode
+- `q`: Quit
+
+## Development Checks
+
+```bash
+just ruff
+just mypy
+uv run pytest
+```
