@@ -2,149 +2,159 @@
 This file is for coding agents working in this repository.
 Follow these conventions unless a task explicitly requires otherwise.
 
-## Project Overview
+## Project Snapshot
 - Language: Python 3.12+
 - Package manager and runner: `uv`
 - API framework: FastAPI
-- Database layer: SQLModel + SQLite (DuckDB is installed but not primary here)
-- Main app entrypoint: `src/github_feed/main.py`
-- Core orchestration layer: `src/github_feed/engine.py`
+- Terminal UI framework: Textual
+- Database layer: SQLModel + SQLite
+- Main API entrypoint: `src/github_feed/main.py`
+- Main orchestration layer: `src/github_feed/engine.py`
 - GitHub API client: `src/github_feed/github_client.py`
+- Database access layer: `src/github_feed/sql/client.py`
 - Tests: `tests/engine_test.py`
 
 ## Repository Layout
-- `src/github_feed/main.py`: FastAPI app, middleware, and routes
-- `src/github_feed/engine.py`: business logic and refresh/retrieval orchestration
-- `src/github_feed/github_client.py`: sync/async GitHub API calls and caching
+- `src/github_feed/main.py`: FastAPI app setup, middleware, and routes
+- `src/github_feed/engine.py`: orchestration for refresh and retrieval flows
+- `src/github_feed/github_client.py`: sync and async GitHub API access + caching
 - `src/github_feed/lib/models.py`: Pydantic API/domain models
 - `src/github_feed/lib/utils.py`: utility helpers
 - `src/github_feed/sql/models.py`: SQLModel table schemas
-- `src/github_feed/sql/client.py`: DB access methods
-- `tests/`: pytest tests
-- `justfile`: canonical project commands
-- `pyproject.toml`: lint/type/test config
+- `src/github_feed/sql/client.py`: SQLModel session-based DB methods
+- `src/github_feed/tui/app.py`: Textual TUI application
+- `tests/`: pytest test suite
+- `justfile`: canonical dev commands
+- `pyproject.toml`: lint, type, and pytest config
 
 ## Environment and Setup
 - Required env var: `GITHUB_TOKEN`
-- Optional env var: `DB_FILENAME` (default `data/stargazing.db`)
+- Optional env vars:
+  - `DB_FILENAME` (default: `data/stargazing.db`)
+  - `RELEASE_WINDOW_DAYS` (used by TUI recent mode, default 30)
 - Install dependencies (including dev): `uv sync`
 
 ## Build, Run, Lint, and Test Commands
-Use these preferred commands for agent tasks.
+Use these as the default commands for agent tasks.
 
-### Run and Build
-- Dev server (FastAPI): `just run-dev`
-- Prod-style run (FastAPI): `just run-prod`
-- Uvicorn directly: `just uvicorn`
-- Build Docker image: `just build`
-- Run with Docker Compose: `just run`
+### Run the Application
+- API dev server: `just run-dev`
+- API prod-style run: `just run-prod`
+- Uvicorn direct: `just uvicorn`
+- TUI app: `just run-tui`
+
+### Docker
+- Build image: `just build`
+- Run compose stack: `just run`
 - Rebuild and run detached: `just rebuild`
 
 ### Lint and Format
-- Lint and auto-fix: `just lint`
-- Lint equivalent: `uv run ruff check --fix .`
-- Format code: `just fmt`
-- Format equivalent: `uv run ruff format`
-- Lint + format together: `just ruff`
+- Lint (with auto-fixes): `just lint`
+- Format: `just fmt`
+- Lint + format: `just ruff`
+- Ruff equivalents:
+  - `uv run ruff check --fix .`
+  - `uv run ruff format`
 
 ### Type Checking
-- Run mypy via dmypy: `just mypy`
-- Start dmypy manually (if needed): `uv run dmypy start`
-- Direct mypy run (optional): `uv run mypy`
+- Preferred type check: `just mypy`
+- dmypy direct: `uv run dmypy check src/github_feed`
+- Full mypy run (optional): `uv run mypy`
 
-### Testing
+### Testing (Pytest)
 - Run all tests: `uv run pytest`
-- Run single test file: `uv run pytest tests/engine_test.py`
-- Run one test function: `uv run pytest tests/engine_test.py::test_load_config`
-- Run tests by expression: `uv run pytest -k load_config`
-- Run verbose output: `uv run pytest -v`
+- Run a single test file: `uv run pytest tests/engine_test.py`
+- Run a single test function: `uv run pytest tests/engine_test.py::test_load_config`
+- Run tests matching a pattern: `uv run pytest -k load_config`
+- Verbose test output: `uv run pytest -v`
 
 Pytest defaults from `pyproject.toml`:
 - `--import-mode=importlib`
-- `--disable-socket` (tests should be network-free)
+- `--disable-socket` (tests must be network-free by default)
 - `--asyncio-mode=auto`
 
-## Architecture and Behavioral Expectations
-- Keep API boundary validation in Pydantic models (`lib/models.py`).
-- Keep database writes/queries in `sql/client.py`; avoid leaking SQL into route handlers.
-- Keep orchestration in `engine.py`; route handlers should stay thin.
-- Preserve sync and async behavior parity where both paths exist.
-- Keep datetime handling timezone-aware in UTC for logic.
-- Convert to display/local time only in presentation-oriented computed fields.
-- Preserve existing caching strategy in `github_client.py` unless task requires change.
-- Handle partial failures in fan-out operations without crashing whole workflows.
-- Favor additive, minimal changes over broad refactors.
+## Architecture and Behavior Expectations
+- Keep route handlers thin; orchestration belongs in `engine.py`.
+- Keep SQL logic in `sql/client.py`; avoid query logic in routes.
+- Keep API payload validation in Pydantic models (`lib/models.py`).
+- Preserve sync/async behavior parity where both paths exist.
+- Preserve caching behavior in `github_client.py` unless task requires change.
+- Keep results deterministic (sort releases by `created_at` descending where applicable).
+- Use timezone-aware UTC datetimes for logic and persistence.
+- Convert to local display time only in presentation-focused computed fields.
+- Handle fan-out partial failures without collapsing the whole workflow.
 
 ## Code Style and Conventions
 
-### Formatting and Lint Rules
-- Ruff is the formatter and linter authority.
+### Formatting and Linting
+- Ruff is the formatting and linting authority.
 - Max line length: 110.
 - Use 4-space indentation.
 - Prefer double quotes unless escaping strongly favors single quotes.
-- Keep trailing commas where formatter uses them.
-- Do not manually fight formatter output.
+- Keep trailing commas where formatter expects them.
+- Do not hand-format against Ruff output.
 
 ### Imports
-- Group imports: stdlib, third-party, local package.
-- Let Ruff/isort maintain sorting and grouping.
+- Group imports as: stdlib, third-party, local package.
+- Keep imports sorted via Ruff/isort.
 - Prefer explicit imports over wildcard imports.
-- Use aliases only for clarity or collision handling.
+- Alias imports only for clarity or name collision handling.
 
-### Typing and Type Safety
-- Add explicit type hints for parameters and return values.
+### Typing
+- Add explicit type hints for function params and return types.
 - Prefer modern unions (`X | None`) over `Optional[X]`.
-- Use precise `collections.abc` types where appropriate.
-- Keep Pyright strict-mode expectations in mind.
-- Mypy is strict; fix type issues instead of silencing by default.
-- Use targeted type ignores only when unavoidable, with rationale.
+- Prefer `collections.abc` types for interfaces (`Sequence`, `Mapping`, etc.).
+- Mypy is strict (`[tool.mypy] strict = true`): fix root type issues.
+- Pyright strict mode is configured; avoid introducing unknown-type regressions.
+- Use `type: ignore` only when unavoidable, narrowly scoped, and justified.
 
 ### Naming
-- `snake_case`: functions, variables, modules.
-- `PascalCase`: classes and model types.
-- `UPPER_SNAKE_CASE`: constants.
-- Prefix private/internal helpers with `_`.
-- Prefer descriptive names over abbreviations.
+- `snake_case`: functions, methods, variables, modules
+- `PascalCase`: classes and model types
+- `UPPER_SNAKE_CASE`: constants
+- Prefix internal helpers with `_` when not part of public API
+- Prefer descriptive names over abbreviations
 
-### Data Models
-- Validate external payloads at boundaries with Pydantic models.
-- Keep SQLModel schemas typed and aligned with domain models.
-- Use computed fields/properties for stable derived values.
-- Preserve current model shapes unless migration is part of task.
+### Models and Data Mapping
+- Validate external API payloads with Pydantic models.
+- Keep SQLModel schemas aligned with domain model intent.
+- Keep field names stable unless migration/refactor is explicit.
+- Use computed fields for deterministic derived presentation values.
 
 ### Async and Concurrency
-- Use async APIs for network-bound fan-out.
-- Use `asyncio.gather(..., return_exceptions=True)` when partial success is acceptable.
-- Handle per-task exceptions with context-rich logging.
-- Keep ordering/sorting behavior deterministic in returned collections.
+- Use async flows for network-bound fan-out work.
+- Prefer `asyncio.gather(..., return_exceptions=True)` when partial success is acceptable.
+- Handle per-task exceptions with contextual logging.
+- Avoid introducing non-deterministic ordering in returned collections.
 
 ### Error Handling and Logging
-- Catch specific exceptions first (`ValidationError`, `IntegrityError`, etc.).
-- Use broad `except Exception` only as containment with logging.
-- Include context in log messages (repo, URL, status, window).
-- Avoid silent failures; log, re-raise, or return explicit failure state.
-- Preserve existing logging style (`logger.info/warning/error/debug`).
+- Catch specific exceptions first (`ValidationError`, `IntegrityError`, `NoResultFound`, etc.).
+- Use broad `except Exception` only as containment with logging context.
+- Include useful context in logs (repo name, URL, status, time window).
+- Avoid silent failures; log and return explicit behavior.
+- Follow existing logger style: `logger.info`, `logger.warning`, `logger.error`, `logger.debug`.
 
-### Testing Guidelines
-- Use pytest with focused assertions.
-- Prefer `pytest.mark.parametrize` for matrix-like inputs.
-- Use fixtures like `monkeypatch` for environment/process isolation.
-- Keep tests deterministic and offline by default.
-- Add or adjust tests when changing config loading, mapping, or orchestration logic.
+### Testing Expectations
+- Use pytest with deterministic, focused assertions.
+- Prefer `pytest.mark.parametrize` for matrix-style inputs.
+- Use `monkeypatch` and stubs for environment and behavior isolation.
+- Keep tests offline and deterministic (`--disable-socket`).
+- Add/adjust tests when changing orchestration, config loading, or mapping logic.
 
-## Agent Execution Checklist
-- Read `pyproject.toml` and `justfile` before introducing new commands.
+## Agent Workflow Checklist
+- Read `pyproject.toml` and `justfile` before introducing new tooling.
 - Keep changes minimal, scoped, and architecture-aligned.
 - Run relevant checks before finalizing:
   - `just ruff`
   - `just mypy` for typing-heavy edits
-  - `uv run pytest` or targeted pytest command
+  - `uv run pytest` or a targeted pytest command
 - Prefer fixing root causes over adding ignores/workarounds.
-- Never commit secrets or hard-code tokens.
+- Do not commit secrets or hard-code tokens.
 
 ## Cursor and Copilot Rules
-No rule files were found at the time of writing:
+No repository-specific Cursor or Copilot rule files were found:
 - `.cursor/rules/**`
 - `.cursorrules`
 - `.github/copilot-instructions.md`
-If any of these files are added later, treat them as higher-priority repo instructions and update this guide.
+
+If any of these files are added later, treat them as higher-priority instructions than this guide and update this file.
