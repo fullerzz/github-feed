@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import os
 from collections.abc import Sequence
 from datetime import UTC, datetime
@@ -213,11 +214,12 @@ class ReleasesScreen(Screen[None]):
     async def load_releases(self, refresh: bool) -> None:
         app = _feed_app(self)
         status = self.query_one("#release-status", Label)
+        content = self.query_one("#release-content", Horizontal)
         if not app.has_engine:
             status.update("No engine available. Set GITHUB_TOKEN and restart.")
             return
 
-        self.loading = True
+        content.loading = True
         mode_text = app.release_mode_label
         status.update(f"Loading releases ({mode_text})...")
         try:
@@ -228,9 +230,10 @@ class ReleasesScreen(Screen[None]):
                 )
                 app.last_release_refresh_at = datetime.now(UTC)
             else:
-                releases = app.engine.retrieve_releases_for_mode(
-                    window_days=app.release_window_days,
-                    all_history=app.release_mode == ReleaseMode.ALL_HISTORY,
+                releases = await asyncio.to_thread(
+                    app.engine.retrieve_releases_for_mode,
+                    app.release_window_days,
+                    app.release_mode == ReleaseMode.ALL_HISTORY,
                 )
 
             self._releases = list(releases)
@@ -239,7 +242,7 @@ class ReleasesScreen(Screen[None]):
         except Exception as error:
             status.update(f"Failed to load releases: {error}")
         finally:
-            self.loading = False
+            content.loading = False
 
     def _render_release_list(self) -> None:
         list_view = self.query_one("#release-list", ListView)
