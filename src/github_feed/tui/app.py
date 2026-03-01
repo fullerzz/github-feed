@@ -205,7 +205,7 @@ class ReleasesScreen(Screen[None]):
         elif button_id == "refresh-releases":
             self.load_releases(refresh=True)
 
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
+    def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
         if event.list_view.id != "release-list":
             return
         self._show_release_notes(event.list_view.index)
@@ -256,6 +256,7 @@ class ReleasesScreen(Screen[None]):
         if self._releases:
             list_view.index = 0
             self._show_release_notes(0)
+            list_view.focus()
         else:
             self.query_one("#release-notes", Markdown).update("No releases found for the current mode.")
 
